@@ -1,0 +1,687 @@
+:root {
+    /* --- PALET WARNA (Sama dengan Inventory) --- */
+    --color-warm-white: #fffef9;
+    --color-gold: #f4c430;
+    --color-leaf-green: #6b8e43;
+    --color-earth-brown: #8b7e66;
+    --color-deep-dark: #2f2f2a;
+    --color-clay-red: #c2433d;
+    --pure-white: #ffffff;
+    --border-line: #e6e4dc;
+
+    --bg-body: var(--color-warm-white);
+    --bg-card: var(--pure-white);
+    --text-main: var(--color-deep-dark);
+    --text-muted: var(--color-earth-brown);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* =========================================
+   LAYOUT UTAMA (SIDEBAR + CONTENT)
+   ========================================= */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Mencegah scroll double */
+}
+
+/* --- SIDEBAR STYLE --- */
+.sidebar {
+    width: 250px;
+    background: linear-gradient(120deg, #5d5d5d, var(--color-earth-brown));
+    color: var(--color-warm-white);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    border-right: 1px solid var(--color-deep-dark);
+    transition: all 0.3s ease;
+}
+
+.brand {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(120deg, var(--color-deep-dark), #5d5d5d);
+}
+.brand img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.nav-menu {
+    padding: 10px;
+    flex-grow: 1;
+}
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: rgba(255, 254, 249, 0.7);
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: 0.2s;
+    font-size: 0.95rem;
+}
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-gold);
+}
+.nav-item.active {
+    background-color: var(--color-gold);
+    color: var(--pure-white);
+    font-weight: 600;
+}
+.nav-item i {
+    width: 25px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+/* --- MAIN CONTENT WRAPPER --- */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-body);
+    height: 100vh;
+    overflow-y: auto; /* Scroll hanya di konten utama */
+    padding: 0; /* Container didalamnya yang kasih padding */
+}
+
+/* MODIFIKASI NAV BAR LAMA AGAR SESUAI */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+}
+
+/* MODIFIKASI RESPONSIVE MOBILE UNTUK SIDEBAR */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-main);
+    margin-right: 15px;
+}
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: absolute;
+        left: -100%;
+        height: 100%;
+        z-index: 999;
+    }
+    .sidebar.active {
+        left: 0;
+    }
+    .sidebar-overlay.active {
+        display: block;
+    }
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    /* Sesuaikan navbar lama agar ada tombol menu */
+    .navbar {
+        padding-left: 15px;
+    }
+    .logo {
+        display: none;
+    } /* Logo di navbar atas disembunyikan karena sudah ada di sidebar */
+}
+
+/* --- UTILITIES --- */
+.container {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.btn-primary {
+    background: var(--color-gold);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: var(--pure-white);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(244, 196, 48, 0.25);
+    transition: transform 0.2s;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* --- LAYOUT GRID (DESKTOP) --- */
+.content-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* --- HEADER SECTION --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    color: var(--text-main);
+}
+
+/* --- CATEGORY LIST CARD --- */
+.card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-line);
+    box-shadow: 0 2px 5px rgba(47, 47, 42, 0.03);
+    overflow: hidden;
+}
+
+.list-header {
+    padding: 15px 25px;
+    background: #fdfdfd;
+    border-bottom: 1px solid var(--border-line);
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 1rem;
+}
+
+.category-list {
+    list-style: none;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.cat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    border-bottom: 1px solid var(--border-line);
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.cat-item:last-child {
+    border-bottom: none;
+}
+.cat-item:hover {
+    background-color: #fafafa;
+}
+.cat-item.active {
+    background-color: rgba(244, 196, 48, 0.1);
+    font-weight: 600;
+    border-left: 4px solid var(--color-gold);
+}
+
+.cat-name {
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.cat-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.icon-btn:hover {
+    color: var(--color-gold);
+    background: rgba(244, 196, 48, 0.1);
+}
+.icon-btn.delete:hover {
+    color: var(--color-clay-red);
+    background: rgba(194, 67, 61, 0.1);
+}
+
+/* Edit Mode Styles */
+.cat-item.editing {
+    background: #fff;
+    padding: 10px 20px;
+}
+.edit-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--color-gold);
+    border-radius: 6px;
+    outline: none;
+    font-size: 0.95rem;
+    margin-right: 10px;
+    background: #fffef9;
+}
+.btn-icon-square {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border-line);
+    cursor: pointer;
+    background: white;
+    color: var(--text-muted);
+}
+.btn-check {
+    border-color: var(--color-leaf-green);
+    color: var(--color-leaf-green);
+    background: rgba(107, 142, 67, 0.1);
+}
+.btn-cancel:hover {
+    background: #f3f4f6;
+}
+
+/* --- TABLE SECTION --- */
+.table-container {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-line);
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.inventory-table th {
+    text-align: left;
+    padding: 15px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-line);
+    font-size: 0.9rem;
+}
+.inventory-table td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-line);
+    color: var(--text-main);
+}
+
+/* ========================================================= */
+/* --- UPDATE PENTING: FIX ALIGNMENT KOLOM --- */
+/* ========================================================= */
+
+/* Kolom 1 (Produk): Dipaksa mengambil lebar maksimal yang tersedia */
+.inventory-table th:first-child,
+.inventory-table td:first-child {
+    width: 100%;
+    text-align: left;
+}
+
+/* Kolom 2 (Actions): Dipaksa mengambil lebar secukupnya konten, dan rata kanan */
+.inventory-table th:last-child,
+.inventory-table td:last-child {
+    width: 1%; /* Trik agar kolom ini hanya selebar kontennya */
+    white-space: nowrap; /* Mencegah tombol turun ke baris baru */
+    text-align: right; /* Header dan Isi rata kanan */
+}
+
+/* ========================================================= */
+
+.product-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.product-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--border-line);
+}
+
+.btn-adjust {
+    background: var(--color-gold);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-line);
+}
+.pagination-info {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+.pagination-controls {
+    display: flex;
+    gap: 10px;
+}
+.btn-page {
+    background: var(--bg-card);
+    border: 1px solid var(--border-line);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-page:hover:not(:disabled) {
+    background: var(--color-gold);
+    color: var(--pure-white);
+    border-color: var(--color-gold);
+}
+.btn-page:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f3f4f6;
+}
+
+/* ================= MODAL STYLES (Copied from Inventory) ================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(47, 47, 42, 0.6);
+    z-index: 99999 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-container {
+    background: var(--bg-card);
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-line);
+}
+.modal-overlay.show .modal-container {
+    transform: translateY(0);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border-line);
+}
+.modal-header h3 {
+    color: var(--text-main);
+    margin: 0;
+}
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+.modal-body {
+    padding: 25px;
+}
+.product-summary-box {
+    display: flex;
+    align-items: center;
+    background: var(--color-warm-white);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-line);
+    margin-bottom: 25px;
+}
+.summary-info {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+.summary-info h4 {
+    color: var(--text-main);
+    margin-bottom: 5px;
+}
+.summary-info span {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.current-stock-box {
+    text-align: right;
+}
+.current-stock-box small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+.current-stock-box strong {
+    font-size: 1.4rem;
+    color: var(--color-gold);
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.9rem;
+}
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-line);
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    outline: none;
+}
+.form-input:focus {
+    border-color: var(--color-gold);
+}
+.toggle-buttons {
+    display: flex;
+    gap: 10px;
+}
+.btn-toggle {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--border-line);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.btn-toggle.active[data-type="add"] {
+    background: rgba(107, 142, 67, 0.15);
+    color: var(--color-leaf-green);
+    border-color: var(--color-leaf-green);
+}
+.btn-toggle.active[data-type="subtract"] {
+    background: rgba(194, 67, 61, 0.15);
+    color: var(--color-clay-red);
+    border-color: var(--color-clay-red);
+}
+.modal-footer {
+    padding: 20px 25px;
+    border-top: 1px solid var(--border-line);
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border-line);
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ================= RESPONSIVE MEDIA QUERIES (MOBILE) ================= */
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .category-sidebar .category-list {
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    /* Navbar Tumpuk */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    .search-bar {
+        width: 100%;
+    }
+
+    /* Header Tumpuk */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Pagination Tumpuk */
+    .pagination-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* --- TABEL RESPONSIF (Card View Style 2 KOLOM) --- */
+    .inventory-table thead {
+        display: none;
+    }
+
+    .inventory-table,
+    .inventory-table tbody,
+    .inventory-table tr,
+    .inventory-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .inventory-table tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-line);
+        border-radius: 12px;
+        background: var(--bg-card);
+        padding: 15px;
+    }
+
+    /* Style Sel */
+    .inventory-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border: none; /* Hapus garis pemisah karena barisnya sedikit */
+    }
+
+    /* Baris 1: Produk Info */
+    .inventory-table td:first-child {
+        border-bottom: 1px solid #f3f4f6; /* Garis tipis pemisah antara nama & tombol */
+        padding-bottom: 15px;
+        margin-bottom: 10px;
+
+        /* Reset width 100% dari desktop agar flexbox jalan normal di mobile */
+        width: auto;
+    }
+
+    /* Baris 2: Tombol Action */
+    .inventory-table td:last-child {
+        justify-content: flex-end; /* Tombol rata kanan */
+        padding-top: 5px;
+
+        /* Reset width 1% dari desktop */
+        width: auto;
+    }
+}
