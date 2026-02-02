@@ -15,8 +15,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label>SKU</label>
-                    <input type="text" id="inputSku" placeholder="Opsional">
+                    <label>Gambar Produk</label>
+
+                    <div id="imagePreviewContainer" style="margin-bottom: 10px; display: none;">
+                        <img id="imagePreview" src="" alt="Preview"
+                            style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                    </div>
+
+                    <input type="file" id="inputImage" accept="image/*">
+                    <small style="color: #6B7280; font-size: 12px; margin-top: 4px;">Format: JPG, PNG, WEBP (Klik Edit
+                        untuk ganti)</small>
                 </div>
 
                 <div class="form-group">
@@ -38,11 +46,6 @@
                         <option value="Minuman">Minuman</option>
                         <option value="Snack">Snack</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Stok Awal</label>
-                    <input type="number" id="inputStok" value="0">
                 </div>
 
                 <div class="form-group">

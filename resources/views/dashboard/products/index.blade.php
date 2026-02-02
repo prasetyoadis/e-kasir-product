@@ -51,7 +51,6 @@
                         <tr>
                             <th>Produk</th>
                             <th>Kategori</th>
-                            <th>Harga</th>
                             <th>Status</th>
                             <th>Stok</th>
                             <th>Aksi</th>

@@ -6,7 +6,6 @@ Route::get('/', function () {
     return view('index');
 });
 
-
 Route::get('/dashboard', function () {
     return view('dashboard.index');
 });
@@ -16,7 +15,7 @@ Route::get('/dashboard/products', function () {
 });
 
 Route::get('/dashboard/products/detail', function () {
-    return view('dashboard.products.show');
+    return view('dashboard.products.detail');
 });
 Route::get('/dashboard/inventories', function () {
     return view('dashboard.inventory.index');

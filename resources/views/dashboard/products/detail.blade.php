@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Detail Produk - Gambar</title>
+    <title>Detail Produk</title>
     <link rel="stylesheet" href="{{ asset('css/product/style.css') }}">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700&display=swap"
@@ -19,7 +19,7 @@
             <img src="{{ asset('asset/img/kassia-bg-trans.webp') }}" alt="Kassia" class="brand-text">
         </div>
         <div class="global-search">
-            <input type="text" placeholder="Type to search...">
+            <input type="text" placeholder="Cari produk...">
         </div>
     </nav>
 
@@ -27,57 +27,160 @@
 
         <header class="prod-header-card">
             <div class="prod-info-wrapper">
-                <img src="https://images.unsplash.com/photo-1603133872878-684f571d70f2?w=150" alt="Produk"
-                    class="prod-main-img">
+                <img src="https://via.placeholder.com/80" alt="Produk" class="prod-main-img">
                 <div class="prod-text-details">
-                    <h1 class="prod-title">Sego Njamoer Original</h1>
+                    <h1 class="prod-title">Memuat...</h1>
                     <div class="prod-meta">
-                        <span class="sku-badge">SKU: SNJ-SBY-001</span>
                         <span class="status-pill active">Aktif</span>
                     </div>
-                    <p class="prod-price">Mulai dari <strong>Rp 15.000</strong></p>
                 </div>
             </div>
-
             <div class="prod-actions">
-                <button class="btn-outline">Stok: 50</button>
+                <div class="stock-counter">
+                    <span class="label">Total Stok</span>
+                    <span class="value" id="headerTotalStock">0</span>
+                </div>
                 <button class="btn-primary">Edit Produk</button>
             </div>
         </header>
 
         <nav class="tab-navigation">
-            <a href="#" class="tab-link">Info Produk</a>
-            <a href="#" class="tab-link active">Gambar</a>
-            <a href="#" class="tab-link">Varian</a>
-            <a href="#" class="tab-link">Stok</a>
-            <a href="#" class="tab-link">Histori Stok</a>
+            <a href="#" class="tab-link active" onclick="switchTab(event, 'info')">Info Produk</a>
+            <a href="#" class="tab-link" onclick="switchTab(event, 'gambar')">Gambar</a>
+            <a href="#" class="tab-link" onclick="switchTab(event, 'varian')">Varian</a>
+            <a href="#" class="tab-link" onclick="switchTab(event, 'stok')">Stok</a>
+            <a href="#" class="tab-link" onclick="switchTab(event, 'history')">Histori Stok</a>
         </nav>
 
-        <main class="card gallery-section">
-            <div class="gallery-header">
-                <h3>Gambar Produk</h3>
-                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
-                    <span>+</span> Upload Gambar
-                </button>
-                <input type="file" id="fileInput" hidden multiple accept="image/*">
-            </div>
-
-            <div id="galleryGrid" class="gallery-grid">
-            </div>
-
-            <div class="pagination">
-                <span>Showing page 1 of 1</span>
-                <div class="pagination-controls">
-                    <button disabled>&lt;</button>
-                    <button class="active">1</button>
-                    <button disabled>&gt;</button>
+        <main id="tab-info" class="card tab-content" style="display: flex; flex-direction: column;">
+            <div class="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="info-group">
+                    <label style="color: #666; font-size: 14px;">Nama Produk</label>
+                    <p id="detailName" style="font-weight: 600; font-size: 16px; color: #000;">Memuat...</p>
+                </div>
+                <div class="info-group">
+                    <label style="color: #666; font-size: 14px;">Kategori</label>
+                    <p id="detailCategory" style="font-weight: 600;">-</p>
+                </div>
+                <div class="info-group full-width" style="grid-column: span 2;">
+                    <label style="color: #666; font-size: 14px;">Deskripsi</label>
+                    <p id="detailDesc" style="line-height: 1.6;">-</p>
+                </div>
+                <div class="info-group">
+                    <label style="color: #666; font-size: 14px;">Berat</label>
+                    <p id="detailWeight">-</p>
+                </div>
+                <div class="info-group">
+                    <label style="color: #666; font-size: 14px;">Dimensi</label>
+                    <p id="detailDim">-</p>
                 </div>
             </div>
         </main>
 
+        <main id="tab-gambar" class="card tab-content" style="display: none;">
+            <div class="gallery-header">
+                <h3>Galeri Produk</h3>
+                <button class="btn-primary" onclick="document.getElementById('inputGalleryUpload').click()">+ Upload
+                    Gambar</button>
+                <input type="file" id="inputGalleryUpload" hidden multiple accept="image/*">
+            </div>
+            <div id="galleryGrid" class="gallery-grid"></div>
+        </main>
+
+        <main id="tab-varian" class="card tab-content" style="display: none;">
+            <div class="gallery-header">
+                <h3>Daftar Varian</h3>
+                <button class="btn-primary" onclick="openVariantModal()">+ Tambah Varian</button>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Varian</th>
+                            <th>Harga</th>
+                            <th>SKU</th>
+                            <th>Stok Total</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="variantTableBody"></tbody>
+                </table>
+            </div>
+        </main>
+
+        <main id="tab-stok" class="card tab-content" style="display: none;">
+            <div class="gallery-header">
+                <h3>Lokasi Stok</h3>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lokasi Gudang</th>
+                            <th>Varian</th>
+                            <th>Jumlah</th>
+                            <th>Posisi Rak</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTableBody"></tbody>
+                </table>
+            </div>
+        </main>
+
+        <main id="tab-history" class="card tab-content" style="display: none;">
+            <h3>Riwayat Perubahan Stok</h3>
+            <div id="historyTimeline" class="history-timeline"></div>
+        </main>
+
     </div>
 
-    <script src="{{ asset('js/product/script.js') }}"></script>
+    <div class="modal-overlay" id="modalVariant">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalVariantTitle">Tambah Varian</h3>
+                <button class="btn-outline" style="border:none; width:auto;" onclick="closeVariantModal()">✕</button>
+            </div>
+            <form id="variantForm">
+                <div class="modal-body">
+                    <input type="hidden" id="variantId">
+                    <div class="form-group full-width">
+                        <label>Nama Varian</label>
+                        <input type="text" id="varName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Harga (Rp)</label>
+                        <input type="number" id="varPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>SKU Varian</label>
+                        <input type="text" id="varSku">
+                    </div>
+                    <div class="form-group">
+                        <label>Stok Awal</label>
+                        <input type="number" id="varStock" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="toggle-wrap">
+                            <label class="switch">
+                                <input type="checkbox" id="varStatus" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <span id="varStatusLabel">Aktif</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" onclick="closeVariantModal()">Batal</button>
+                    <button type="submit" class="btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/dashboard/product/script.js') }}"></script>
 </body>
 
 </html>
