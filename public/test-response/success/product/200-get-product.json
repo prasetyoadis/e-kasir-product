@@ -6,63 +6,61 @@
         "errorCode": "31",
         "errorMessage": "Data retrieved successfully",
         "data" : {
-            "id": "e89f53a8-e35a-456c-a411-b14739274565",
-            "sku": "SNJ-SBY-001",
+            "id": "01KG4VXZVXPAVEGWQFGQQ2K8X0",
             "name": "Sego Njamoer Original",
             "description": "Nasi putih dengan jamur krispi khas Sego Njamoer.",
-            "base_price": 15000,
-            "current_stock": 16,
-            "min_stock": 5,
             "variants": [
                 {
-                    "id": "c55d65a3-6059-4da5-b75d-9e6f5b1dfb70",
+                    "id": "01KG4VY9XEXYM5WA9B8BBSDSTH",
+                    "sku": "SNJ-SBY-001",
                     "variant_name": "Reguler",
                     "description": "Porsi standar",
-                    "price": 15000,
-                    "current_stock": 8,
+                    "harga_awal": 15000,
+                    "stock": 8,
                     "min_stock": 5,
                     "is_active": true
                 },
                 {
-                    "id": "24d9cf80-ffa1-4bba-8bd7-6aba5898f784",
+                    "id": "01KG4VYMGB51N4X2KMZ6X47X8W",
+                    "sku": "SNJ-SBY-002",
                     "variant_name": "Jumbo",
                     "description": "Porsi lebih besar",
-                    "current_stock": 8,
+                    "harga_awal": 18000,
+                    "stock": 8,
                     "min_stock": 5,
-                    "price": 18000,
                     "is_active": true
                 }
             ],
             "categories": ["Makanan", "Menu Utama", "Jamur"],
             "image": [
                 {
-                    "url": "asset/img/products/snj-sby-001-gambar-1.webp",
+                    "url": "../../asset/img/products/snj-sby-001.webp",
                     "alt": "Sego Njamoer Original Gambar 1",
                     "is_default": true
                 },
                 {
-                    "url": "asset/img/products/snj-sby-001-gambar-2.webp",
+                    "url": "../../asset/img/products/snj-sby-001.webp",
                     "alt": "Sego Njamoer Original Gambar 2",
                     "is_default": false
                 },
                 {
-                    "url": "asset/img/products/snj-sby-001-gambar-3.webp",
+                    "url": "../../asset/img/products/snj-sby-001.webp",
                     "alt": "Sego Njamoer Original",
                     "is_default": false
                 },
                 {
-                    "url": "asset/img/products/snj-sby-001-gambar-4.webp",
+                    "url": "../../asset/img/products/snj-sby-001.webp",
                     "alt": "Sego Njamoer Original",
                     "is_default": false
                 }
                 ,
                 {
-                    "url": "asset/img/products/snj-sby-001-gambar-5.webp",
+                    "url": "../../asset/img/products/snj-sby-001.webp",
                     "alt": "Sego Njamoer Original",
                     "is_default": false
                 },
                 {
-                    "url": "asset/img/products/snj-sby-001-gambar-6.webp",
+                    "url": "../../asset/img/products/no_image.jpg",
                     "alt": "Sego Njamoer Original",
                     "is_default": false
                 }
