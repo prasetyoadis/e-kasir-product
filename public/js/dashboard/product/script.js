@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
                     : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
-                const dotStock = item.current_stock > 0 ? "bg-green" : "bg-red";
+                const dotStock = item.total_stock > 0 ? "bg-green" : "bg-red";
                 const imgUrl = (item.image && item.image.url) ? item.image.url : "https://via.placeholder.com/56";
                 const category = item.categories ? item.categories[0] : '-';
 
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="dot ${dotStock}"></span>
-                            <strong>${item.current_stock}</strong>
+                            <strong>${item.total_stock}</strong>
                         </div>
                     </td>
                     <td>
