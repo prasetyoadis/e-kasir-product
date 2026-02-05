@@ -1,65 +1,51 @@
 /**
  * ============================================================================
- * GLOBAL FUNCTION: TAB SWITCHING
+ * 1. GLOBAL FUNCTION: TAB SWITCHING
  * ============================================================================
- * Didefinisikan di window agar bisa dipanggil via atribut 'onclick' di HTML.
+ * Digunakan di halaman Index (jika ada tab) dan Halaman Detail.
  */
 window.switchTab = function (event, tabName) {
-    // 1. Jika dipanggil dari klik tombol (bukan auto-load), prevent default link behavior
     if (event) event.preventDefault();
 
-    // 2. Reset status aktif pada semua tombol tab
-    // Hanya jalan jika ada event klik (manual trigger)
-    if (event) {
-        document.querySelectorAll(".tab-link").forEach((link) => {
-            link.classList.remove("active");
-        });
-        event.currentTarget.classList.add("active");
-    }
+    // 1. Reset status aktif pada semua tombol tab
+    document.querySelectorAll(".tab-link").forEach((link) => {
+        link.classList.remove("active");
+    });
 
-    // 3. Sembunyikan SEMUA konten tab
+    // Jika diklik manual (ada event), tambahkan class active ke tombol yang diklik
+    if (event) event.currentTarget.classList.add("active");
+
+    // 2. Sembunyikan SEMUA konten tab agar tidak tumpang tindih
     document.querySelectorAll(".tab-content").forEach((content) => {
         content.style.display = "none";
         content.classList.remove("active-content");
     });
 
-    // 4. Tampilkan konten tab yang dipilih
-    const targetId = "tab-" + tabName;
-    const target = document.getElementById(targetId);
-
+    // 3. Tampilkan konten tab yang dipilih
+    const target = document.getElementById("tab-" + tabName);
     if (target) {
-        target.style.display = "flex"; // Gunakan flex agar layout card rapi
-        target.style.flexDirection = "column";
+        target.style.display = "block"; // Menggunakan block/grid sesuai CSS class active-content
         target.classList.add("active-content");
-    } else {
-        console.warn(`Tab target dengan ID '${targetId}' tidak ditemukan.`);
     }
 };
 
 /**
  * ============================================================================
- * MAIN LOGIC (DOM READY)
+ * 2. MAIN LOGIC (DOM READY)
  * ============================================================================
  */
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Script Loaded & DOM Ready");
 
-    // ===============================================
-    // 1. KONFIGURASI PATH API (JSON)
-    // ===============================================
-    // Gunakan "/" di depan agar path absolut dari root public
+    // --- KONFIGURASI PATH API ---
     const API_PATH_INDEX = "/test-response/success/product/200-get-all-product.json";
     const API_PATH_DETAIL = "/test-response/success/product/200-get-product.json";
 
-    // ===============================================
-    // 2. DETEKSI HALAMAN
-    // ===============================================
+    // --- DETEKSI HALAMAN ---
     const isIndexPage = document.getElementById("tableBody") !== null;
     const isDetailPage = document.querySelector(".prod-title") !== null;
 
-    // ===============================================
-    // 3. ROUTING LOGIC
-    // ===============================================
+    // --- ROUTING LOGIC ---
     if (isIndexPage) {
         console.log("Mode: Halaman List Produk");
         fetchData(API_PATH_INDEX, initIndexPage);
@@ -69,72 +55,75 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchData(API_PATH_DETAIL, initDetailPage);
     }
 
-    // ===============================================
-    // 4. FUNGSI FETCH DATA (REUSABLE)
-    // ===============================================
+    // --- FUNGSI FETCH DATA (HELPER) ---
     function fetchData(url, callback) {
-        console.log("Mengambil data dari:", url);
-
         fetch(url)
             .then((res) => {
                 if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
                 return res.json();
             })
             .then((json) => {
-                // Validasi struktur JSON standar { result: { data: ... } }
                 if (json.result && json.result.data) {
                     callback(json.result.data);
                 } else {
-                    throw new Error("Format JSON tidak valid (key result.data hilang).");
+                    throw new Error("Format JSON tidak valid.");
                 }
             })
             .catch((err) => {
                 console.error("Fetch Error:", err);
-                handleErrorDisplay(err);
+                if(isDetailPage) alert("Gagal memuat data: " + err.message);
+                if(isIndexPage) document.getElementById("tableBody").innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">${err.message}</td></tr>`;
             });
     }
 
-    // Menampilkan error di UI agar user tahu
-    function handleErrorDisplay(err) {
-        const msg = `Gagal memuat data: ${err.message}`;
-        if (isIndexPage) {
-            document.getElementById("tableBody").innerHTML =
-                `<tr><td colspan="5" style="color:red; text-align:center; padding:20px;">${msg}</td></tr>`;
-        } else if (isDetailPage) {
-            document.querySelector(".prod-title").textContent = "Error";
-            alert(msg);
-        }
-    }
-
     // ========================================================================
-    // 5. LOGIKA HALAMAN INDEX (LIST PRODUK)
+    // 3. LOGIKA HALAMAN INDEX (DAFTAR PRODUK)
     // ========================================================================
     function initIndexPage(dataList) {
+        let originalData = [...dataList]; // Simpan data asli untuk filter
+
+        // Elements
         const tableBody = document.getElementById("tableBody");
-        if (!tableBody) return;
+        const searchInput = document.getElementById("searchInput");
+        // Cari filter kategori by ID atau Class
+        const filterCategory = document.getElementById("filterCategory") || document.querySelector(".table-filter");
 
-        // Render Awal
-        renderTable(dataList);
+        // Modal Elements (Produk)
+        const modal = document.getElementById("modalForm");
+        const modalTitle = document.getElementById("modalTitle");
+        const btnTambah = document.getElementById("btnTambah");
+        const btnClose = document.getElementById("closeModal");
+        const btnBatal = document.getElementById("btnBatal");
+        const productForm = document.getElementById("productForm");
 
+        // Input Form Produk
+        const inputId = document.getElementById("productId");
+        const inputNama = document.getElementById("inputNama");
+        const inputKategori = document.getElementById("inputKategori");
+        const inputDesc = document.getElementById("inputDesc");
+        const inputStatus = document.getElementById("inputStatus");
+        const statusLabel = document.getElementById("statusLabel");
+        const inputImage = document.getElementById("inputImage");
+        const imagePreview = document.getElementById("imagePreview");
+        const previewContainer = document.getElementById("imagePreviewContainer");
+
+        // --- A. Render Tabel ---
         function renderTable(data) {
             tableBody.innerHTML = "";
-
-            if(data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Data Kosong</td></tr>`;
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">Data tidak ditemukan</td></tr>`;
                 return;
             }
 
-            data.forEach((item, index) => {
-                // Tentukan status badge
+            data.forEach((item) => {
                 const isActive = item.is_active;
                 const statusBadge = isActive
                     ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
                     : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
                 const dotStock = item.current_stock > 0 ? "bg-green" : "bg-red";
-
-                // Handle Image
                 const imgUrl = (item.image && item.image.url) ? item.image.url : "https://via.placeholder.com/56";
+                const category = item.categories ? item.categories[0] : '-';
 
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
@@ -147,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>
                     </td>
-                    <td>${item.categories ? item.categories[0] : '-'}</td>
+                    <td>${category}</td>
                     <td>${statusBadge}</td>
                     <td>
                         <div style="display:flex; align-items:center; gap:8px;">
@@ -158,32 +147,106 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>
                         <div class="action-buttons">
                             <button class="btn-outline" onclick="window.location.href='/dashboard/products/detail?id=${item.id}'">Detail</button>
-                            <button class="btn-outline">Edit</button>
+                            <button class="btn-outline" onclick="openEditProduct('${item.id}')">Edit</button>
                         </div>
                     </td>
                 `;
                 tableBody.appendChild(tr);
             });
+
+            // Update Pagination Info
+            const pageInfo = document.getElementById("pageInfo");
+            if(pageInfo) pageInfo.textContent = `Showing 1 to ${data.length} entries`;
         }
 
-        // Search Logic Sederhana
-        const searchInput = document.getElementById("searchInput");
-        if (searchInput) {
-            searchInput.addEventListener("input", (e) => {
-                const keyword = e.target.value.toLowerCase();
-                const filtered = dataList.filter(item => item.name.toLowerCase().includes(keyword));
-                renderTable(filtered);
+        // --- B. Filter Logic (Search + Sort Category) ---
+        function applyFilters() {
+            const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+            const category = filterCategory ? filterCategory.value : "";
+
+            const filtered = originalData.filter(item => {
+                const matchName = item.name.toLowerCase().includes(keyword);
+                let matchCat = true;
+                if (category && category !== "") {
+                    matchCat = item.categories && item.categories.includes(category);
+                }
+                return matchName && matchCat;
+            });
+
+            renderTable(filtered);
+        }
+
+        if (searchInput) searchInput.addEventListener("input", applyFilters);
+        if (filterCategory) filterCategory.addEventListener("change", applyFilters);
+
+        // --- C. Modal Logic (Produk) ---
+        function showModal() {
+            if(modal) { modal.classList.add("open"); modal.style.display = "flex"; }
+        }
+        function hideModal() {
+            if(modal) { modal.classList.remove("open"); modal.style.display = "none"; }
+        }
+        function resetForm() {
+            if(productForm) productForm.reset();
+            if(inputId) inputId.value = "";
+            if(imagePreview) imagePreview.src = "";
+            if(previewContainer) previewContainer.style.display = "none";
+            if(inputStatus) inputStatus.checked = true;
+            if(statusLabel) statusLabel.textContent = "Aktif";
+        }
+
+        // Event Listeners Modal Produk
+        if (btnTambah) btnTambah.addEventListener("click", () => {
+            resetForm();
+            if(modalTitle) modalTitle.textContent = "Tambah Produk";
+            showModal();
+        });
+
+        if (btnClose) btnClose.addEventListener("click", hideModal);
+        if (btnBatal) btnBatal.addEventListener("click", hideModal);
+
+        if (inputStatus) {
+            inputStatus.addEventListener("change", function() {
+                if(statusLabel) statusLabel.textContent = this.checked ? "Aktif" : "Nonaktif";
             });
         }
+
+        // Global Function untuk Edit Produk (Index)
+        window.openEditProduct = function(id) {
+            const product = originalData.find(p => p.id == id);
+            if (!product) return;
+
+            resetForm();
+            if(modalTitle) modalTitle.textContent = "Edit Produk";
+
+            if(inputId) inputId.value = product.id;
+            if(inputNama) inputNama.value = product.name;
+            if(inputDesc) inputDesc.value = product.description || "";
+            if(inputKategori && product.categories) inputKategori.value = product.categories[0];
+
+            if(inputStatus) {
+                inputStatus.checked = product.is_active;
+                statusLabel.textContent = product.is_active ? "Aktif" : "Nonaktif";
+            }
+
+            if (product.image && product.image.url) {
+                 if(imagePreview) imagePreview.src = product.image.url;
+                 if(previewContainer) previewContainer.style.display = "block";
+            }
+            showModal();
+        };
+
+        // Render Awal
+        renderTable(dataList);
     }
 
     // ========================================================================
-    // 6. LOGIKA HALAMAN DETAIL (DETAIL PRODUK)
+    // 4. LOGIKA HALAMAN DETAIL (INFO, VARIAN, STOK, HISTORY)
     // ========================================================================
     function initDetailPage(detailData) {
-        console.log("Data Detail Diterima:", detailData);
+        console.log("Detail Data Loaded:", detailData);
 
-        // --- A. Render Header Info ---
+        // --- A. Render Header & Info ---
         const domTitle = document.querySelector(".prod-title");
         const domImg = document.querySelector(".prod-main-img");
         const domSku = document.querySelector(".prod-subtitle");
@@ -191,13 +254,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if(domTitle) domTitle.textContent = detailData.name;
 
-        // Ambil gambar default atau gambar pertama
         if (domImg && detailData.image && detailData.image.length > 0) {
             const defaultImg = detailData.image.find(img => img.is_default) || detailData.image[0];
             domImg.src = defaultImg.url;
         }
 
-        // Tampilkan SKU dari varian pertama (jika root tidak punya SKU)
         if(domSku) {
             const displaySku = (detailData.variants && detailData.variants.length > 0)
                 ? detailData.variants[0].sku
@@ -205,139 +266,167 @@ document.addEventListener("DOMContentLoaded", function () {
             domSku.textContent = "SKU: " + displaySku.split('-').slice(0, 2).join('-');
         }
 
-        // Hitung Total Stok
         const totalStock = (detailData.variants || []).reduce((acc, curr) => acc + (curr.stock || 0), 0);
         if(domTotalStock) domTotalStock.textContent = totalStock;
 
-
-        // --- B. Render Tab Info Dasar ---
+        // Info Tab Text
         const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
         setText("detailName", detailData.name);
         setText("detailCategory", detailData.categories ? detailData.categories.join(", ") : "-");
         setText("detailDesc", detailData.description || "-");
 
 
-        // --- C. Render Tab Varian (TABEL VARIAN) ---
+        // --- B. RENDER TABEL VARIAN (DENGAN TOMBOL EDIT) ---
         const variantBody = document.getElementById("variantTableBody");
-        if (variantBody) {
+        if (variantBody && detailData.variants) {
             variantBody.innerHTML = "";
-            const variants = detailData.variants || [];
+            detailData.variants.forEach((v) => {
+                const tr = document.createElement("tr");
 
-            if (variants.length === 0) {
-                variantBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">Belum ada varian</td></tr>`;
-            } else {
-                variants.forEach((v) => {
-                    const isActive = v.is_active;
-                    const badgeClass = isActive ? 'badge-active' : 'badge-inactive';
-                    const statusText = isActive ? 'Aktif' : 'Nonaktif';
+                const statusBadge = v.is_active
+                    ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
+                    : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
-                    // Note: JSON Detail menggunakan key 'stock', JSON Index menggunakan 'current_stock'
-                    const stok = v.stock !== undefined ? v.stock : v.current_stock;
+                // Tombol Edit memanggil fungsi global openEditVariantModal
+                const editButton = `
+                    <button class="btn-sm btn-outline"
+                        onclick="openEditVariantModal('${v.id}', '${v.variant_name}', '${v.sku}', ${v.price || v.harga_awal}, ${v.stock}, ${v.is_active})">
+                        <i class="fa-regular fa-pen-to-square"></i> Edit
+                    </button>
+                `;
 
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td><strong>${v.variant_name}</strong></td>
-                        <td style="font-family:monospace; color:#555;">${v.sku || '-'}</td>
-                        <td>${stok} pcs</td>
-                        <td><span class="badge ${badgeClass}">${statusText}</span></td>
-                        <td><button class="btn-icon" title="Edit Varian">✎</button></td>
-                    `;
-                    variantBody.appendChild(tr);
-                });
-            }
+                tr.innerHTML = `
+                    <td><strong>${v.variant_name}</strong></td>
+                    <td>${v.sku || '-'}</td>
+                    <td>${v.stock} pcs</td>
+                    <td>${statusBadge}</td>
+                    <td style="text-align:right">${editButton}</td>
+                `;
+                variantBody.appendChild(tr);
+            });
         }
 
 
-        // --- D. Render Tab Stok (TABEL STOK) ---
+        // --- C. Render Tabel Stok (Gudang) ---
         const stockBody = document.getElementById("stockTableBody");
-        if (stockBody) {
+        if (stockBody && detailData.variants) {
             stockBody.innerHTML = "";
-            const variants = detailData.variants || [];
-
-            if (variants.length === 0) {
-                stockBody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">Data Stok Tidak Tersedia</td></tr>`;
-            } else {
-                variants.forEach((v) => {
-                    const tr = document.createElement("tr");
-                    const isActive = v.is_active;
-                    const badgeClass = isActive ? 'badge-active' : 'badge-inactive';
-                    const statusText = isActive ? 'Aktif' : 'Nonaktif';
-                    const stok = v.stock !== undefined ? v.stock : 0;
-
-                    tr.innerHTML = `
-                        <td style="font-family:monospace; color:#333;">${v.sku || '-'}</td>
-                        <td><strong>${stok}</strong></td>
-                        <td><span class="badge ${badgeClass}">${statusText}</span></td>
-                    `;
-                    stockBody.appendChild(tr);
-                });
-            }
+            detailData.variants.forEach((v) => {
+                const tr = document.createElement("tr");
+                const statusBadge = v.is_active ? `<span class="badge badge-active">Aktif</span>` : `<span class="badge badge-inactive">Nonaktif</span>`;
+                tr.innerHTML = `
+                    <td style="font-family:monospace">${v.sku || '-'}</td>
+                    <td><strong>${v.stock}</strong></td>
+                    <td>${statusBadge}</td>
+                `;
+                stockBody.appendChild(tr);
+            });
         }
 
-        // --- E. Render Tab Galeri ---
+
+        // --- D. Render Galeri ---
         const galleryGrid = document.getElementById("galleryGrid");
-        if (galleryGrid) {
+        if (galleryGrid && detailData.image) {
             galleryGrid.innerHTML = "";
-            const images = detailData.image || [];
-
-            if(images.length === 0) {
-                galleryGrid.innerHTML = "<p>Tidak ada gambar</p>";
-            } else {
-                images.forEach(img => {
-                    const card = document.createElement("div");
-                    card.className = "img-card";
-                    card.innerHTML = `
-                        <div class="img-thumb-wrapper">
-                            <img src="${img.url}" class="img-thumb" onerror="this.src='https://via.placeholder.com/150'">
-                            ${img.is_default ? '<span class="default-badge">Default</span>' : ''}
-                        </div>
-                    `;
-                    galleryGrid.appendChild(card);
-                });
-            }
+            detailData.image.forEach(img => {
+                const card = document.createElement("div");
+                card.className = "img-card";
+                card.innerHTML = `
+                    <div class="img-thumb-wrapper">
+                        <img src="${img.url}" class="img-thumb">
+                        ${img.is_default ? '<span class="default-badge">Default</span>' : ''}
+                    </div>`;
+                galleryGrid.appendChild(card);
+            });
         }
 
-        // --- F. AUTO OPEN TAB DEFAULT (PENTING!) ---
-        // Membuka tab 'info' secara otomatis agar halaman tidak terlihat kosong
+        // --- Init Default Tab ---
         initDefaultTab();
     }
 
-    // Fungsi Auto Open Tab
+    // Fungsi Default Tab (Detail Page)
     function initDefaultTab() {
-        // Cek apakah URL punya parameter ?tab=...
         const urlParams = new URLSearchParams(window.location.search);
         const tabParam = urlParams.get('tab');
 
-        if(tabParam) {
-            switchTab(null, tabParam);
+        // Hide all first
+        document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
+        document.querySelectorAll(".tab-link").forEach(el => el.classList.remove("active"));
+
+        if (tabParam) {
+            window.switchTab(null, tabParam);
             const activeLink = document.querySelector(`.tab-link[onclick*='${tabParam}']`);
-            if(activeLink) activeLink.classList.add('active');
+            if (activeLink) activeLink.classList.add('active');
         } else {
-            // Default ke tab Info
-            switchTab(null, 'info');
-            // Manual set class active ke link pertama
-            const infoLink = document.querySelector(".tab-link");
-            if(infoLink) infoLink.classList.add('active');
+            // Default Info
+            window.switchTab(null, 'info');
+            const infoLink = document.querySelector(".tab-link[onclick*='info']");
+            if (infoLink) infoLink.classList.add('active');
         }
     }
 
-    // ===============================================
-    // 7. MODAL LOGIC (Placeholder)
-    // ===============================================
-    // Logic modal varian (hanya visual interaction)
-    const modalVariant = document.getElementById("modalVariant");
-    const variantForm = document.getElementById("variantForm");
+    // ========================================================================
+    // 5. MODAL LOGIC KHUSUS VARIAN (DETAIL PAGE)
+    // ========================================================================
 
-    window.openVariantModal = function () {
-        if (variantForm) variantForm.reset();
-        if (modalVariant) modalVariant.classList.add("open");
-        // fallback jika class open tidak didefinisikan di css, pakai inline style
-        if (modalVariant) modalVariant.style.display = "flex";
+    // Fungsi Global untuk Membuka Modal Varian & Mengisi Data
+    window.openEditVariantModal = function(id, name, sku, price, stock, isActive) {
+        const modal = document.getElementById("modalEditVariant");
+        const form = document.getElementById("editVariantForm");
+
+        if(modal) {
+            // Isi Form dengan data
+            const idInput = document.getElementById("editVarId");
+            const nameInput = document.getElementById("editVarName");
+            const skuInput = document.getElementById("editVarSku");
+            const priceInput = document.getElementById("editVarPrice");
+            const stockInput = document.getElementById("editVarStock");
+            const statusCheck = document.getElementById("editVarStatus");
+            const statusLabel = document.getElementById("editVarStatusLabel");
+
+            if(idInput) idInput.value = id;
+            if(nameInput) nameInput.value = name;
+            if(skuInput) skuInput.value = sku;
+            if(priceInput) priceInput.value = price;
+            if(stockInput) stockInput.value = stock;
+
+            // Handle Boolean/String logic for status
+            const isActiveBool = (isActive === true || isActive === "true");
+            if(statusCheck) statusCheck.checked = isActiveBool;
+            if(statusLabel) statusLabel.textContent = isActiveBool ? "Aktif" : "Non-Aktif";
+
+            // Tampilkan Modal
+            modal.classList.add("open");
+            modal.style.display = "flex";
+        }
     };
 
-    window.closeVariantModal = function () {
-        if (modalVariant) modalVariant.classList.remove("open");
-        if (modalVariant) modalVariant.style.display = "none";
+    // Fungsi Global Tutup Modal Varian
+    window.closeEditVariantModal = function() {
+        const modal = document.getElementById("modalEditVariant");
+        if(modal) {
+            modal.classList.remove("open");
+            modal.style.display = "none";
+        }
     };
 
+    // Event Listener Toggle Status di Modal Edit Varian
+    const editStatusCheck = document.getElementById("editVarStatus");
+    const editStatusLabel = document.getElementById("editVarStatusLabel");
+    if(editStatusCheck && editStatusLabel) {
+        editStatusCheck.addEventListener("change", function() {
+            editStatusLabel.textContent = this.checked ? "Aktif" : "Non-Aktif";
+        });
+    }
+
+    // Handle Submit Form Varian (Simulasi)
+    const editForm = document.getElementById("editVariantForm");
+    if(editForm) {
+        editForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const newName = document.getElementById("editVarName").value;
+            alert(`Simulasi: Varian '${newName}' berhasil diperbarui!`);
+            closeEditVariantModal();
+        });
+    }
 });

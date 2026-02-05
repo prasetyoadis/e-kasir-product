@@ -11,9 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentPage = 1;
 
     // --- DOM ELEMENTS ---
-    const categoryListContainer = document.getElementById(
-        "categoryListContainer",
-    );
+    const categoryListContainer = document.getElementById("categoryListContainer");
     const productTableBody = document.getElementById("productTableBody");
     const tableInfoText = document.getElementById("tableInfoText");
     const addCategoryBtn = document.getElementById("addCategoryBtn");
@@ -42,6 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 return {
                     ...product,
                     image: imageUrl,
+                    // SOLUSI SKU: Jika data API tidak punya SKU di level atas,
+                    // kita berikan fallback atau string kosong agar tidak undefined.
+                    sku: product.sku || "N/A"
                 };
             });
 
@@ -56,11 +57,14 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch((err) => {
             console.error(err);
-            categoryListContainer.innerHTML = `<li class="cat-item" style="color:red">Error loading data.</li>`;
+            if (categoryListContainer) {
+                categoryListContainer.innerHTML = `<li class="cat-item" style="color:red">Error loading data.</li>`;
+            }
         });
 
     // --- 2. RENDER CATEGORIES ---
     function renderCategories() {
+        if (!categoryListContainer) return;
         categoryListContainer.innerHTML = "";
         categoriesSet.forEach((catName) => {
             const li = document.createElement("li");
@@ -86,10 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         : "";
                 li.innerHTML = `<span class="cat-name">${catName}</span>${actionHtml}`;
                 li.addEventListener("click", (e) => {
-                    if (
-                        !e.target.closest("button") &&
-                        !e.target.closest("input")
-                    ) {
+                    if (!e.target.closest("button") && !e.target.closest("input")) {
                         currentFilter = catName;
                         currentPage = 1;
                         renderCategories();
@@ -103,7 +104,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 3. RENDER TABLE ---
     function renderTable(filterCat) {
+        if (!productTableBody) return;
         productTableBody.innerHTML = "";
+
         let filteredProducts = allProducts;
         if (filterCat !== "Semua Menu") {
             filteredProducts = allProducts.filter((p) =>
@@ -113,18 +116,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const totalItems = filteredProducts.length;
         const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
-        if (currentPage > totalPages && totalPages > 0)
-            currentPage = totalPages;
+        if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
         if (totalPages === 0) currentPage = 1;
 
         const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
         const endIndex = startIndex + ROWS_PER_PAGE;
         const paginatedItems = filteredProducts.slice(startIndex, endIndex);
 
-        tableInfoText.innerText = `Menampilkan kategori: "${filterCat}" (${totalItems} produk)`;
+        if (tableInfoText) {
+            tableInfoText.innerText = `Menampilkan kategori: "${filterCat}" (${totalItems} produk)`;
+        }
 
         if (totalItems === 0) {
-            productTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">Tidak ada produk di kategori ini.</td></tr>`;
+            productTableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">Tidak ada produk di kategori ini.</td></tr>`;
             updatePaginationUI(0, 0, 0, 1);
             return;
         }
@@ -141,9 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     </div>
                 </td>
-                
                 <td>${item.sku}</td>
-
                 <td style="text-align: right;">
                     <button class="btn-adjust btn-redirect-edit" data-id="${item.id}">
                         <i class="fa-regular fa-pen-to-square"></i> Edit
@@ -162,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updatePaginationUI(total, start, end, totalPages) {
+        if (!paginationInfo) return;
         if (total === 0) {
             paginationInfo.innerText = "Showing 0 of 0";
             btnPrev.disabled = true;
@@ -203,12 +206,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (input) input.focus();
         }, 50);
     };
+
     window.cancelEdit = () => {
         editingCategory = null;
         renderCategories();
     };
+
     window.saveCategory = (oldName) => {
         const input = document.getElementById(`editInput-${oldName}`);
+        if (!input) return;
         const newName = input.value.trim();
         if (newName && newName !== oldName) {
             categoriesSet.delete(oldName);
@@ -217,6 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         editingCategory = null;
         renderCategories();
     };
+
     window.deleteCategory = (catName) => {
         if (confirm(`Hapus kategori "${catName}"?`)) {
             categoriesSet.delete(catName);
@@ -227,24 +234,24 @@ document.addEventListener("DOMContentLoaded", () => {
             renderCategories();
         }
     };
+
     addCategoryBtn.addEventListener("click", () => {
         const newCatName = "New Category " + categoriesSet.size;
         categoriesSet.add(newCatName);
         editingCategory = newCatName;
         renderCategories();
         const list = document.querySelector(".category-sidebar");
-        list.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (list) list.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    // =========================================
-    // --- REDIRECT LOGIC (PENGGANTI MODAL) ---
-    // =========================================
-    productTableBody.addEventListener("click", (e) => {
-        const btn = e.target.closest(".btn-redirect-edit");
-        if (btn) {
-            const id = btn.dataset.id;
-            // Redirect ke halaman detail produk tab Varian
-            window.location.href = `/dashboard/products/detail?id=${id}&tab=varian`;
-        }
-    });
+    // --- REDIRECT LOGIC ---
+    // --- REDIRECT LOGIC ---
+productTableBody.addEventListener("click", (e) => {
+    const btn = e.target.closest(".btn-redirect-edit");
+    if (btn) {
+        const id = btn.dataset.id;
+        // Hanya kirim tab=varian, modal tidak akan terbuka otomatis
+        window.location.href = `/dashboard/products/detail?id=${id}&tab=varian`;
+    }
+});
 });
