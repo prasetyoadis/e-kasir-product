@@ -331,9 +331,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 galleryGrid.appendChild(card);
             });
         }
-
+        
         // --- Init Default Tab ---
         initDefaultTab();
+
+        // --- AUTO OPEN EDIT VARIANT FROM QUERY PARAM ---
+        const params = new URLSearchParams(window.location.search);
+        const variantIdFromUrl = params.get("variant_id");
+
+        if (variantIdFromUrl && detailData.variants && detailData.variants.length > 0) {
+            const targetVariant = detailData.variants.find(
+                (v) => String(v.id) === String(variantIdFromUrl)
+            );
+
+            if (targetVariant) {
+                // Delay dikit biar tab & DOM kelar render
+                setTimeout(() => {
+                    window.openEditVariantModal(
+                        targetVariant.id,
+                        targetVariant.variant_name,
+                        targetVariant.sku,
+                        targetVariant.price || targetVariant.harga_awal || 0,
+                        targetVariant.stock || 0,
+                        targetVariant.is_active
+                    );
+                }, 300);
+            }
+        }
+
     }
 
     // Fungsi Default Tab (Detail Page)
