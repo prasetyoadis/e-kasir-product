@@ -12,7 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentPage = 1;
 
     // --- DOM ---
-    const categoryListContainer = document.getElementById("categoryListContainer");
+    const categoryListContainer = document.getElementById(
+        "categoryListContainer",
+    );
     const productTableBody = document.getElementById("productTableBody");
     const tableInfoText = document.getElementById("tableInfoText");
     const addCategoryBtn = document.getElementById("addCategoryBtn");
@@ -43,7 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     product.categories.forEach((c) => categoriesSet.add(c));
                 }
 
-                if (!Array.isArray(product.variants) || product.variants.length === 0) {
+                if (
+                    !Array.isArray(product.variants) ||
+                    product.variants.length === 0
+                ) {
                     return;
                 }
 
@@ -56,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             sku: variant.sku || "N/A",
                             categories: product.categories || [],
                             image: imageUrl,
-                            is_active: product.is_active
+                            is_active: product.is_active,
                         });
                     });
                 } else {
@@ -68,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         sku: variant.sku || "N/A",
                         categories: product.categories || [],
                         image: imageUrl,
-                        is_active: product.is_active
+                        is_active: product.is_active,
                     });
                 }
             });
@@ -79,8 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch((err) => {
             console.error(err);
-            categoryListContainer.innerHTML =
-                `<li class="cat-item" style="color:red">Error loading data</li>`;
+            categoryListContainer.innerHTML = `<li class="cat-item" style="color:red">Error loading data</li>`;
         });
 
     // --- RENDER CATEGORY ---
@@ -120,24 +124,23 @@ document.addEventListener("DOMContentLoaded", () => {
         let filtered = allProducts;
         if (filterCat !== "Semua Menu") {
             filtered = allProducts.filter((p) =>
-                p.categories.includes(filterCat)
+                p.categories.includes(filterCat),
             );
         }
 
         const totalItems = filtered.length;
         const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
-        if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+        if (currentPage > totalPages && totalPages > 0)
+            currentPage = totalPages;
 
         const start = (currentPage - 1) * ROWS_PER_PAGE;
         const end = start + ROWS_PER_PAGE;
         const items = filtered.slice(start, end);
 
-        tableInfoText.innerText =
-            `Menampilkan "${filterCat}" (${totalItems} item)`;
+        tableInfoText.innerText = `Menampilkan "${filterCat}" (${totalItems} item)`;
 
         if (totalItems === 0) {
-            productTableBody.innerHTML =
-                `<tr><td colspan="3" style="text-align:center">Tidak ada data</td></tr>`;
+            productTableBody.innerHTML = `<tr><td colspan="3" style="text-align:center">Tidak ada data</td></tr>`;
             updatePaginationUI(0, 0, 0, 1);
             return;
         }
@@ -169,13 +172,15 @@ document.addEventListener("DOMContentLoaded", () => {
             totalItems,
             start + 1,
             Math.min(end, totalItems),
-            totalPages
+            totalPages,
         );
     }
 
     function updatePaginationUI(total, start, end, totalPages) {
         paginationInfo.innerText =
-            total === 0 ? "Showing 0 of 0" : `Showing ${start}-${end} of ${total}`;
+            total === 0
+                ? "Showing 0 of 0"
+                : `Showing ${start}-${end} of ${total}`;
         btnPrev.disabled = currentPage === 1;
         btnNext.disabled = currentPage === totalPages;
     }
@@ -193,18 +198,17 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTable(currentFilter);
     });
 
-    // --- EDIT REDIRECT (PER VARIANT) ---
+    // --- REDIRECT LOGIC ---
     productTableBody.addEventListener("click", (e) => {
         const btn = e.target.closest(".btn-redirect-edit");
-        if (!btn) return;
+        if (btn) {
+            const productId = btn.dataset.productId;
+            const variantId = btn.dataset.variantId;
 
-        const productId = btn.dataset.productId;
-        const variantId = btn.dataset.variantId;
-
-        window.location.href =
-            `/dashboard/products/detail?id=${productId}&tab=varian&variant_id=${variantId}`;
+            // PERBAIKAN DI SINI: Ubah 'varian' menjadi 'variant' (pakai 't')
+            window.location.href = `/dashboard/products/detail?id=${productId}&tab=variant&variant_id=${variantId}`;
+        }
     });
-
     // --- CATEGORY ACTIONS ---
     window.cancelEdit = () => {
         editingCategory = null;
