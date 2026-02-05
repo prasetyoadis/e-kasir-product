@@ -24,7 +24,7 @@ window.switchTab = function (event, tabName) {
     // 3. Tampilkan konten tab yang dipilih
     const target = document.getElementById("tab-" + tabName);
     if (target) {
-        target.style.display = "block"; // Menggunakan block/grid sesuai CSS class active-content
+        target.style.display = "block"; // Sesuai CSS active-content
         target.classList.add("active-content");
     }
 };
@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Script Loaded & DOM Ready");
 
     // --- KONFIGURASI PATH API ---
+    // Sesuaikan dengan struktur folder public Anda
     const API_PATH_INDEX = "/test-response/success/product/200-get-all-product.json";
     const API_PATH_DETAIL = "/test-response/success/product/200-get-product.json";
 
@@ -85,10 +86,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Elements
         const tableBody = document.getElementById("tableBody");
         const searchInput = document.getElementById("searchInput");
-        // Cari filter kategori by ID atau Class
         const filterCategory = document.getElementById("filterCategory") || document.querySelector(".table-filter");
 
-        // Modal Elements (Produk)
+        // Modal Elements (Produk Utama)
         const modal = document.getElementById("modalForm");
         const modalTitle = document.getElementById("modalTitle");
         const btnTambah = document.getElementById("btnTambah");
@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const inputDesc = document.getElementById("inputDesc");
         const inputStatus = document.getElementById("inputStatus");
         const statusLabel = document.getElementById("statusLabel");
-        const inputImage = document.getElementById("inputImage");
         const imagePreview = document.getElementById("imagePreview");
         const previewContainer = document.getElementById("imagePreviewContainer");
 
@@ -154,12 +153,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 tableBody.appendChild(tr);
             });
 
-            // Update Pagination Info
+            // Update Pagination Info (Placeholder)
             const pageInfo = document.getElementById("pageInfo");
             if(pageInfo) pageInfo.textContent = `Showing 1 to ${data.length} entries`;
         }
 
-        // --- B. Filter Logic (Search + Sort Category) ---
+        // --- B. Filter Logic (Search + Category) ---
         function applyFilters() {
             const keyword = searchInput ? searchInput.value.toLowerCase() : "";
             const category = filterCategory ? filterCategory.value : "";
@@ -179,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (searchInput) searchInput.addEventListener("input", applyFilters);
         if (filterCategory) filterCategory.addEventListener("change", applyFilters);
 
-        // --- C. Modal Logic (Produk) ---
+        // --- C. Modal Logic (Produk Utama) ---
         function showModal() {
             if(modal) { modal.classList.add("open"); modal.style.display = "flex"; }
         }
@@ -195,7 +194,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if(statusLabel) statusLabel.textContent = "Aktif";
         }
 
-        // Event Listeners Modal Produk
         if (btnTambah) btnTambah.addEventListener("click", () => {
             resetForm();
             if(modalTitle) modalTitle.textContent = "Tambah Produk";
@@ -241,42 +239,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ========================================================================
-    // 4. LOGIKA HALAMAN DETAIL (INFO, VARIAN, STOK, HISTORY)
+    // 4. LOGIKA HALAMAN DETAIL
     // ========================================================================
     function initDetailPage(detailData) {
         console.log("Detail Data Loaded:", detailData);
 
-        // --- A. Render Header & Info ---
+        // --- A. Render Header & Info (Versi Bersih: Tanpa SKU & Stok) ---
         const domTitle = document.querySelector(".prod-title");
         const domImg = document.querySelector(".prod-main-img");
-        const domSku = document.querySelector(".prod-subtitle");
-        const domTotalStock = document.getElementById("headerTotalStock");
 
+        // 1. Set Judul
         if(domTitle) domTitle.textContent = detailData.name;
 
+        // 2. Set Gambar Utama
         if (domImg && detailData.image && detailData.image.length > 0) {
             const defaultImg = detailData.image.find(img => img.is_default) || detailData.image[0];
             domImg.src = defaultImg.url;
         }
 
-        if(domSku) {
-            const displaySku = (detailData.variants && detailData.variants.length > 0)
-                ? detailData.variants[0].sku
-                : (detailData.sku || "-");
-            domSku.textContent = "SKU: " + displaySku.split('-').slice(0, 2).join('-');
-        }
-
-        const totalStock = (detailData.variants || []).reduce((acc, curr) => acc + (curr.stock || 0), 0);
-        if(domTotalStock) domTotalStock.textContent = totalStock;
-
-        // Info Tab Text
+        // --- Info Tab Text (Bagian Bawah) ---
         const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
         setText("detailName", detailData.name);
         setText("detailCategory", detailData.categories ? detailData.categories.join(", ") : "-");
         setText("detailDesc", detailData.description || "-");
 
 
-        // --- B. RENDER TABEL VARIAN (DENGAN TOMBOL EDIT) ---
+        // --- B. RENDER TABEL VARIAN (UPDATED: Parameter Edit Baru) ---
         const variantBody = document.getElementById("variantTableBody");
         if (variantBody && detailData.variants) {
             variantBody.innerHTML = "";
@@ -287,10 +275,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
                     : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
-                // Tombol Edit memanggil fungsi global openEditVariantModal
+                // DATA PREPARATION FOR EDIT MODAL
+                // Escape petik satu pada deskripsi agar tidak merusak HTML onclick
+                const safeDesc = (v.description || "").replace(/'/g, "&#39;");
+
+                // Parameter: ID, Nama, Desc, HargaAwal, MinStock, Status
                 const editButton = `
                     <button class="btn-sm btn-outline"
-                        onclick="openEditVariantModal('${v.id}', '${v.variant_name}', '${v.sku}', ${v.price || v.harga_awal}, ${v.stock}, ${v.is_active})">
+                        onclick="openEditVariantModal('${v.id}', '${v.variant_name}', '${safeDesc}', ${v.harga_awal}, ${v.min_stock}, ${v.is_active})">
                         <i class="fa-regular fa-pen-to-square"></i> Edit
                     </button>
                 `;
@@ -307,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // --- C. Render Tabel Stok (Gudang) ---
+        // --- C. Render Tabel Stok (Overview) ---
         const stockBody = document.getElementById("stockTableBody");
         if (stockBody && detailData.variants) {
             stockBody.innerHTML = "";
@@ -366,29 +358,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ========================================================================
-    // 5. MODAL LOGIC KHUSUS VARIAN (DETAIL PAGE)
+    // 5. MODAL LOGIC KHUSUS EDIT VARIAN (UPDATED FIELDS)
     // ========================================================================
 
-    // Fungsi Global untuk Membuka Modal Varian & Mengisi Data
-    window.openEditVariantModal = function(id, name, sku, price, stock, isActive) {
+    // Menerima parameter sesuai permintaan: Nama, Desc, Harga Awal, MinStock, Status
+    window.openEditVariantModal = function(id, name, desc, hargaAwal, minStock, isActive) {
         const modal = document.getElementById("modalEditVariant");
-        const form = document.getElementById("editVariantForm");
 
         if(modal) {
-            // Isi Form dengan data
+            // Isi Form dengan data dari parameter
             const idInput = document.getElementById("editVarId");
             const nameInput = document.getElementById("editVarName");
-            const skuInput = document.getElementById("editVarSku");
-            const priceInput = document.getElementById("editVarPrice");
-            const stockInput = document.getElementById("editVarStock");
+            const descInput = document.getElementById("editVarDesc");
+            const hargaInput = document.getElementById("editVarHargaAwal");
+            const minStockInput = document.getElementById("editVarMinStock");
             const statusCheck = document.getElementById("editVarStatus");
             const statusLabel = document.getElementById("editVarStatusLabel");
 
             if(idInput) idInput.value = id;
             if(nameInput) nameInput.value = name;
-            if(skuInput) skuInput.value = sku;
-            if(priceInput) priceInput.value = price;
-            if(stockInput) stockInput.value = stock;
+            if(descInput) descInput.value = desc;
+            if(hargaInput) hargaInput.value = hargaAwal;
+            if(minStockInput) minStockInput.value = minStock;
 
             // Handle Boolean/String logic for status
             const isActiveBool = (isActive === true || isActive === "true");
@@ -401,7 +392,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Fungsi Global Tutup Modal Varian
     window.closeEditVariantModal = function() {
         const modal = document.getElementById("modalEditVariant");
         if(modal) {
@@ -410,7 +400,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Event Listener Toggle Status di Modal Edit Varian
+    // Listener untuk Label Toggle Status Real-time (Modal Varian)
     const editStatusCheck = document.getElementById("editVarStatus");
     const editStatusLabel = document.getElementById("editVarStatusLabel");
     if(editStatusCheck && editStatusLabel) {
@@ -425,7 +415,9 @@ document.addEventListener("DOMContentLoaded", function () {
         editForm.addEventListener("submit", function(e) {
             e.preventDefault();
             const newName = document.getElementById("editVarName").value;
-            alert(`Simulasi: Varian '${newName}' berhasil diperbarui!`);
+            const newDesc = document.getElementById("editVarDesc").value;
+
+            alert(`Simulasi: Varian '${newName}' berhasil diperbarui!\nDeskripsi: ${newDesc}`);
             closeEditVariantModal();
         });
     }
