@@ -56,20 +56,13 @@
         <header class="prod-header-card">
             <div class="prod-info-wrapper">
                 <img src="https://via.placeholder.com/80" alt="Produk" class="prod-main-img">
-
                 <div class="prod-text-details">
-                    <h1 class="prod-title">Memuat Data...</h1>
-                    <div class="prod-meta">
-                        <span class="prod-subtitle">SKU: -</span>
-                        <span class="stock-text">
-                            <i class="fa-solid fa-box"></i> Total Stok: <strong id="headerTotalStock">0</strong>
-                        </span>
-                    </div>
+                    <h1 class="prod-title">Memuat...</h1>
                 </div>
             </div>
 
             <div class="prod-actions">
-                <button class="btn-outline text-danger">
+                <button class="btn-outline">
                     <i class="fa-regular fa-trash-can"></i> Hapus
                 </button>
                 <button class="btn-primary">
@@ -254,38 +247,41 @@
     <div id="modalEditVariant" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <div class="modal-header">
-                <h3>Edit Varian</h3>
+                <h3>Edit Detail Varian</h3>
                 <button onclick="closeEditVariantModal()"
                     style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
             </div>
             <form id="editVariantForm">
                 <input type="hidden" id="editVarId">
+
                 <div class="modal-body">
                     <div class="form-group full-width">
                         <label>Nama Varian</label>
-                        <input type="text" id="editVarName" required>
+                        <input type="text" id="editVarName" required placeholder="Contoh: Jumbo / Pedas">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Deskripsi Varian</label>
+                        <textarea id="editVarDesc" rows="2" placeholder="Keterangan singkat varian ini..."
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;"></textarea>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div class="form-group">
-                            <label>Harga (Rp)</label>
-                            <input type="number" id="editVarPrice" required>
+                            <label>Harga Awal (Rp)</label>
+                            <input type="number" id="editVarHargaAwal" required>
+                            <small style="color: var(--text-sub); font-size: 11px;">*Harga modal/dasar</small>
                         </div>
                         <div class="form-group">
-                            <label>Stok Saat Ini</label>
-                            <input type="number" id="editVarStock" required>
+                            <label>Min. Stock Alert</label>
+                            <input type="number" id="editVarMinStock" required>
+                            <small style="color: var(--text-sub); font-size: 11px;">*Batas notifikasi stok
+                                tipis</small>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>SKU Varian</label>
-                        <input type="text" id="editVarSku" disabled
-                            style="background-color: #f3f4f6; cursor: not-allowed;">
-                        <small style="color: var(--text-sub); font-size: 11px;">SKU tidak dapat diubah</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Status</label>
+                        <label>Status Varian</label>
                         <div class="toggle-wrap">
                             <label class="switch">
                                 <input type="checkbox" id="editVarStatus">
