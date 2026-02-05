@@ -23,8 +23,7 @@
                     </div>
 
                     <input type="file" id="inputImage" accept="image/*">
-                    <small style="color: #6B7280; font-size: 12px; margin-top: 4px;">Format: JPG, PNG, WEBP (Klik Edit
-                        untuk ganti)</small>
+                    <small style="color: #6B7280; font-size: 12px; margin-top: 4px;">Format: JPG, PNG, WEBP</small>
                 </div>
 
                 <div class="form-group">
@@ -48,9 +47,10 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Harga (Rp)</label>
-                    <input type="number" id="inputHarga" required placeholder="0">
+                <div class="form-group full-width">
+                    <label>Deskripsi</label>
+                    <textarea id="inputDesc" rows="3" placeholder="Tulis deskripsi produk di sini..."
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; resize: vertical; font-family: inherit;"></textarea>
                 </div>
             </div>
 
