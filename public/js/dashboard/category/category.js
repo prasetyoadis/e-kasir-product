@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let editingCategory = null;
     let currentPage = 1;
 
-    // --- DOM ELEMENTS (PAGE) ---
+    // --- DOM ELEMENTS ---
     const categoryListContainer = document.getElementById(
         "categoryListContainer",
     );
@@ -20,21 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const paginationInfo = document.getElementById("paginationInfo");
     const btnPrev = document.getElementById("btnPrev");
     const btnNext = document.getElementById("btnNext");
-
-    // --- DOM ELEMENTS (MODAL ADJUSTMENT) ---
-    const modalOverlay = document.getElementById("adjustModal");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const saveBtn = document.getElementById("saveBtn");
-    const modalImg = document.getElementById("modalProductImg");
-    const modalName = document.getElementById("modalProductName");
-    const modalSku = document.getElementById("modalProductSku");
-    const modalCurrentStock = document.getElementById("modalCurrentStock");
-    const modalProductIdHidden = document.getElementById("modalProductId");
-    const adjustAmountInput = document.getElementById("adjustAmount");
-    const adjustNoteInput = document.getElementById("adjustNote");
-    const toggleButtons = document.querySelectorAll(".btn-toggle");
-    const adjustmentTypeHidden = document.getElementById("adjustmentType");
 
     const DEFAULT_IMAGE = "asset/img/products/no_image.jpg";
 
@@ -46,11 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then((json) => {
             const rawProducts = json.result.data;
-            // Inject Random Stock untuk demo
             allProducts = rawProducts.map((product) => {
                 let imageUrl = product?.image?.url;
-
-                // kalau null / undefined / empty
                 if (!imageUrl) {
                     imageUrl = DEFAULT_IMAGE;
                 } else {
@@ -60,8 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return {
                     ...product,
                     image: imageUrl,
-                    min_stock: product.min_stock,
-                    stock: product.current_stock,
                 };
             });
 
@@ -150,11 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         paginatedItems.forEach((item) => {
-            // Kita tidak perlu logic status badge lagi karena kolomnya dihapus
-            // Tapi kita tetap simpan logic Image URL
             let imgUrl = item.image;
-            // Note: Pastikan logic image url handler kamu disini (sesuai kode terakhir)
-
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>
@@ -162,14 +138,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         <img src="${imgUrl}" class="product-img" onerror="this.src='https://via.placeholder.com/40'">
                         <div class="product-info">
                             <div style="font-weight:600">${item.name}</div>
-                            <span style="font-size:0.8rem; color:#8b7e66">${item.sku}</span>
                         </div>
                     </div>
                 </td>
                 
+                <td>${item.sku}</td>
+
                 <td style="text-align: right;">
-                    <button class="btn-adjust open-modal-btn" data-id="${item.id}">
-                        <i class="fa-solid fa-arrow-up"></i> Adjust
+                    <button class="btn-adjust btn-redirect-edit" data-id="${item.id}">
+                        <i class="fa-regular fa-pen-to-square"></i> Edit
                     </button>
                 </td>
             `;
@@ -259,102 +236,15 @@ document.addEventListener("DOMContentLoaded", () => {
         list.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    // ================= MODAL LOGIC (ADJUSTMENT) =================
-
-    // Event Delegation untuk tombol Adjust di tabel
+    // =========================================
+    // --- REDIRECT LOGIC (PENGGANTI MODAL) ---
+    // =========================================
     productTableBody.addEventListener("click", (e) => {
-        const btn = e.target.closest(".open-modal-btn");
+        const btn = e.target.closest(".btn-redirect-edit");
         if (btn) {
             const id = btn.dataset.id;
-            // Cari produk di array allProducts (karena sudah ada stok random disana)
-            const product = allProducts.find((p) => p.id == id);
-            if (product) openModal(product);
+            // Redirect ke halaman detail produk tab Varian
+            window.location.href = `/dashboard/products/detail?id=${id}&tab=varian`;
         }
     });
-
-    function openModal(product) {
-        document.getElementById("adjustForm").reset();
-        resetToggleButtons();
-        modalImg.src = product.image;
-        modalImg.onerror = () =>
-            (modalImg.src = "https://via.placeholder.com/40?text=No+Img");
-        modalName.textContent = product.name;
-        modalSku.textContent = product.sku;
-        modalCurrentStock.textContent = product.stock;
-        modalProductIdHidden.value = product.id;
-        modalOverlay.classList.add("show");
-    }
-
-    function closeModal() {
-        modalOverlay.classList.remove("show");
-    }
-    closeModalBtn.addEventListener("click", closeModal);
-    cancelBtn.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", (e) => {
-        if (e.target === modalOverlay) closeModal();
-    });
-
-    toggleButtons.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-            toggleButtons.forEach((b) => b.classList.remove("active"));
-            e.currentTarget.classList.add("active");
-            adjustmentTypeHidden.value =
-                e.currentTarget.getAttribute("data-type");
-        });
-    });
-
-    function resetToggleButtons() {
-        toggleButtons.forEach((b) => b.classList.remove("active"));
-        document
-            .querySelector('.btn-toggle[data-type="add"]')
-            .classList.add("active");
-        adjustmentTypeHidden.value = "add";
-    }
-
-    saveBtn.addEventListener("click", () => {
-        const amount = adjustAmountInput.value;
-        if (!amount || amount <= 0) {
-            alert("Mohon masukkan jumlah yang valid.");
-            return;
-        }
-        const type = adjustmentTypeHidden.value;
-        alert(
-            `Simulasi: Berhasil ${type === "add" ? "menambah" : "mengurangi"} stok sebanyak ${amount}.`,
-        );
-        closeModal();
-    });
-});
-
-// =========================================
-// --- SIDEBAR LOGIC (GLOBAL) ---
-// =========================================
-
-// Fungsi untuk membuka/tutup sidebar
-function toggleSidebar() {
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.querySelector(".sidebar-overlay");
-    const closeBtn = document.querySelector(".close-sidebar-btn");
-
-    if (sidebar && overlay) {
-        sidebar.classList.toggle("active");
-        overlay.classList.toggle("active");
-
-        // Atur visibility tombol close khusus di mobile
-        if (window.innerWidth <= 768 && closeBtn) {
-            closeBtn.style.display = sidebar.classList.contains("active")
-                ? "block"
-                : "none";
-        }
-    }
-}
-
-// Event Listener untuk mereset sidebar saat layar dibesarkan (Resize)
-window.addEventListener("resize", () => {
-    if (window.innerWidth > 768) {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.querySelector(".sidebar-overlay");
-
-        if (sidebar) sidebar.classList.remove("active");
-        if (overlay) overlay.classList.remove("active");
-    }
 });

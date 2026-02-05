@@ -5,18 +5,20 @@
 window.switchTab = function (event, tabName) {
     if (event) event.preventDefault();
 
-    // 1. Reset tombol active
-    document
-        .querySelectorAll(".tab-link")
-        .forEach((link) => link.classList.remove("active"));
-    if (event) event.currentTarget.classList.add("active");
+    // 1. Reset tombol active (Hanya jika diklik manual / ada event)
+    if (event) {
+        document
+            .querySelectorAll(".tab-link")
+            .forEach((link) => link.classList.remove("active"));
+        event.currentTarget.classList.add("active");
+    }
 
     // 2. Sembunyikan semua konten tab
     document.querySelectorAll(".tab-content").forEach((content) => {
         content.style.display = "none";
     });
 
-    // 3. Tampilkan target dengan Display Flex (agar layout Card tidak rusak)
+    // 3. Tampilkan target dengan Display Flex
     const target = document.getElementById("tab-" + tabName);
     if (target) {
         target.style.display = "flex";
@@ -31,6 +33,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const formatRupiah = (num) => "Rp " + num.toLocaleString("id-ID");
 
     // ===============================================
+    // LOGIC BARU: AUTO-SWITCH TAB DARI URL
+    // ===============================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTabParam = urlParams.get("tab"); // Ambil nilai '?tab=...'
+
+    if (activeTabParam) {
+        // Cari elemen link tab yang sesuai (misal onclick="switchTab(event, 'varian')")
+        const targetTabLink = document.querySelector(
+            `.tab-link[onclick*="'${activeTabParam}'"]`,
+        );
+
+        if (targetTabLink) {
+            // 1. Update Tampilan Tombol Tab (Visual)
+            document
+                .querySelectorAll(".tab-link")
+                .forEach((link) => link.classList.remove("active"));
+            targetTabLink.classList.add("active");
+
+            // 2. Panggil fungsi ganti konten (Event null karena otomatis)
+            switchTab(null, activeTabParam);
+        }
+    }
+
+    // ===============================================
     // BAGIAN 0: DATA SUMBER (ENRICHED SOURCE DATA)
     // ===============================================
     const sourceData = [
@@ -42,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
             categories: ["Makanan", "Menu Utama", "Nasi"],
             image: { url: "../../asset/img/products/nasi-goreng.jpg" },
             is_active: true,
-            // Data Detail
             desc: "Nasi goreng dimasak dengan bumbu rempah pilihan, dilengkapi telur mata sapi, kerupuk, dan acar segar.",
             weight: 300,
             dimension: "Bowl 15cm",
@@ -273,8 +298,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const btnPrev = document.getElementById("btnPrev");
         const btnNext = document.getElementById("btnNext");
         const pageInfo = document.getElementById("pageInfo");
-        const gotoPageInput = document.getElementById("gotoPageInput"); // Input Halaman
-        const btnGo = document.getElementById("btnGo"); // Tombol Go
+        const gotoPageInput = document.getElementById("gotoPageInput");
+        const btnGo = document.getElementById("btnGo");
 
         // Modal Elements
         const modal = document.getElementById("modalForm");
@@ -303,7 +328,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 state.filteredData.length / state.itemsPerPage,
             );
 
-            // Update Text Info
             if (pageInfo) {
                 const startIndex =
                     (state.currentPage - 1) * state.itemsPerPage + 1;
@@ -318,13 +342,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // Update Buttons State
             if (btnPrev) btnPrev.disabled = state.currentPage === 1;
             if (btnNext)
                 btnNext.disabled =
                     state.currentPage === totalPages || totalPages === 0;
 
-            // Update Go To Input
             if (gotoPageInput) {
                 gotoPageInput.max = totalPages;
                 gotoPageInput.value = state.currentPage;
@@ -378,7 +400,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updatePaginationControls();
         }
 
-        // --- 4. EVENT LISTENERS PAGINATION ---
+        // --- 4. EVENT LISTENERS ---
         if (btnPrev) {
             btnPrev.addEventListener("click", () => {
                 if (state.currentPage > 1) {
@@ -443,12 +465,9 @@ document.addEventListener("DOMContentLoaded", function () {
         function resetForm() {
             if (productForm) productForm.reset();
             if (inputId) inputId.value = "";
-
-            // Reset Preview
             if (inputImage) inputImage.value = "";
             if (imagePreview) imagePreview.src = "";
             if (previewContainer) previewContainer.style.display = "none";
-
             if (inputStatus) inputStatus.checked = true;
             if (statusLabel) statusLabel.textContent = "Aktif";
         }
@@ -474,7 +493,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (inputStatus) inputStatus.checked = product.status === "Aktif";
             if (statusLabel) statusLabel.textContent = product.status;
 
-            // Show Image
             if (
                 product.img &&
                 product.img !== "https://via.placeholder.com/56"
@@ -530,7 +548,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (btnClose) btnClose.addEventListener("click", closeModalFunc);
         if (btnBatal) btnBatal.addEventListener("click", closeModalFunc);
 
-        // Run Table
         renderTable();
     }
 
@@ -540,23 +557,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const detailTitle = document.querySelector(".prod-title");
 
     if (detailTitle) {
-        // A. AMBIL DATA DARI URL
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get("id");
         let currentProduct = sourceData.find((p) => p.id === productId);
 
-        // Fallback jika ID tidak ada (Demo purpose)
         if (!currentProduct) {
             currentProduct = sourceData[0];
         }
 
         if (currentProduct) {
-            // 1. HEADER (Hapus Harga & SKU, cuma nama & gambar)
             detailTitle.textContent = currentProduct.name;
             const mainImg = document.querySelector(".prod-main-img");
             if (mainImg) mainImg.src = currentProduct.image.url;
 
-            // 2. TAB INFO
             const setTxt = (id, val) => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = val;
@@ -568,7 +581,6 @@ document.addEventListener("DOMContentLoaded", function () {
             setTxt("detailWeight", (currentProduct.weight || 0) + " Gram");
             setTxt("detailDim", currentProduct.dimension || "-");
 
-            // 3. TAB GAMBAR
             const galleryGrid = document.getElementById("galleryGrid");
             if (galleryGrid) {
                 galleryGrid.innerHTML = "";
@@ -588,7 +600,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            // 4. TAB VARIAN
             const variantTableBody =
                 document.getElementById("variantTableBody");
             if (variantTableBody) {
@@ -608,7 +619,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            // 5. TAB STOK
             const stockTableBody = document.getElementById("stockTableBody");
             if (stockTableBody) {
                 stockTableBody.innerHTML = "";
@@ -629,7 +639,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTxt("headerTotalStock", totalStock);
             }
 
-            // 6. TAB HISTORI
             const historyTimeline = document.getElementById("historyTimeline");
             if (historyTimeline) {
                 historyTimeline.innerHTML = "";
@@ -656,7 +665,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // --- Modal Variant Logic ---
         const modalVariant = document.getElementById("modalVariant");
         const variantForm = document.getElementById("variantForm");
 
@@ -668,7 +676,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (modalVariant) modalVariant.classList.remove("open");
         };
 
-        // --- Gallery Upload (Simulasi) ---
         const inputGalleryUpload =
             document.getElementById("inputGalleryUpload");
         if (inputGalleryUpload) {
