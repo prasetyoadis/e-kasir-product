@@ -785,7 +785,296 @@ input:checked + .slider:before {
 .img-dropdown button.btn-delete:hover {
     background: var(--error-bg);
 }
+/* =========================================
+   DETAIL PAGE: TAB CONTENTS STYLING
+   ========================================= */
 
+/* --- GENERAL TAB CARD --- */
+.tab-content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-main);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- TAB 1: INFO PRODUK (GRID LAYOUT) --- */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsif */
+    gap: 24px;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-group label {
+    font-size: 13px;
+    color: var(--text-sub);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-group p {
+    font-size: 16px;
+    color: var(--text-main);
+    font-weight: 600;
+    background: #f9fafb;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin: 0;
+}
+
+.full-width {
+    grid-column: 1 / -1; /* Melebar penuh */
+}
+
+/* --- TAB 2 & 3: TABLE STYLING (VARIAN & STOK) --- */
+/* Mempercantik tabel default */
+.tab-content table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.tab-content th {
+    background: #f8fafc;
+    color: var(--text-sub);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 12px 16px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-content td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.tab-content tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badge Stok/Status */
+.badge-pill {
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.badge-success { background: var(--success-bg); color: var(--success-text); }
+.badge-danger { background: var(--error-bg); color: var(--error-text); }
+
+/* --- TAB 4: GALERI (MASONRY GRID) --- */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.img-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    aspect-ratio: 1/1; /* Kotak Sempurna */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.img-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.img-thumb-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.img-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.default-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+}
+
+.menu-trigger {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.img-card:hover .menu-trigger {
+    opacity: 1;
+}
+
+/* --- TAB 5: HISTORY TIMELINE (NEW) --- */
+.timeline {
+    position: relative;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 24px;
+}
+
+/* Garis vertikal */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: -29px; /* Menyambung ke item bawahnya */
+    width: 2px;
+    background: #e5e7eb;
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+/* Titik bulat */
+.timeline-marker {
+    position: absolute;
+    left: -5px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--primary);
+    z-index: 2;
+}
+
+/* Warna marker berdasarkan tipe */
+.timeline-marker.in { border-color: var(--success-text); }
+.timeline-marker.out { border-color: var(--error-text); }
+.timeline-marker.edit { border-color: var(--primary); }
+
+.timeline-content h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    border: none; /* Reset border h3 default */
+    padding: 0;
+}
+
+.timeline-content p {
+    font-size: 14px;
+    color: var(--text-sub);
+    margin: 0 0 6px 0;
+}
+
+.history-date {
+    font-size: 12px;
+    color: #9ca3af;
+    display: block;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   PERBAIKAN TAMPILAN TAB MENU
+   ========================================= */
+
+/* 1. Jarak antara Tab Menu dengan Card Konten */
+.tabs-wrapper {
+    margin-bottom: 32px; /* Memberi jarak lega ke bawah */
+    border-bottom: 2px solid #e5e7eb; /* Garis abu-abu panjang di bawah tab */
+    display: flex;
+    overflow-x: auto; /* Agar bisa digeser di HP */
+    padding-bottom: 2px; /* Sedikit padding untuk border */
+}
+
+.tabs {
+    display: flex;
+    gap: 30px; /* Jarak antar tulisan tab */
+}
+
+/* 2. Styling Tulisan Tab (Lebih Besar) */
+.tab-link {
+    text-decoration: none;
+    font-size: 16px; /* Diperbesar (sebelumnya mungkin 14px) */
+    font-weight: 600; /* Ditebalkan */
+    color: #6b7280; /* Warna abu-abu saat tidak aktif */
+    padding: 12px 4px; /* Padding atas bawah agar area klik luas */
+    position: relative;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+/* 3. Efek Hover (Saat mouse di atas tab) */
+.tab-link:hover {
+    color: var(--primary); /* Berubah warna saat disorot */
+}
+
+/* 4. Tab Aktif (Yang sedang dipilih) */
+.tab-link.active {
+    color: var(--text-main); /* Warna hitam/gelap */
+    color: var(--primary); /* Atau warna emas/kuning sesuai tema */
+}
+
+/* Garis Bawah pada Tab Aktif */
+.tab-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; /* Posisi garis tepat di border container */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary); /* Garis warna tema */
+    border-radius: 3px 3px 0 0;
+}
 /* =========================================
    9. MEDIA QUERIES & RESPONSIVE RULES
    ========================================= */

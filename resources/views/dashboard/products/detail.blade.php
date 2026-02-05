@@ -3,21 +3,38 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Produk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Detail Produk - Kassia</title>
+
     <link rel="stylesheet" href="{{ asset('css/product/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* CSS Inline untuk memastikan Tab bekerja jika CSS eksternal bermasalah */
+        /* Fallback CSS agar tab tidak numpuk jika CSS eksternal delay */
         .tab-content {
             display: none;
         }
 
-        /* Sembunyikan semua tab secara default */
         .tab-content.active-content {
-            display: flex;
-            flex-direction: column;
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -26,10 +43,11 @@
 
     <nav class="topbar">
         <div class="brand">
-            <img src="{{ asset('asset/img/kassia-logo-transparent.webp') }}" alt="Kassia" style="height: 30px;">
+            <img src="{{ asset('asset/img/kassia-outline-transparent.webp') }}" alt="Logo" class="brand-icon">
+            <img src="{{ asset('asset/img/kassia-bg-trans.webp') }}" alt="Kassia" class="brand-text">
         </div>
         <div class="global-search">
-            <input type="text" placeholder="Cari produk...">
+            <input type="text" placeholder="Cari produk, stok, atau varian...">
         </div>
     </nav>
 
@@ -38,62 +56,81 @@
         <header class="prod-header-card">
             <div class="prod-info-wrapper">
                 <img src="https://via.placeholder.com/80" alt="Produk" class="prod-main-img">
+
                 <div class="prod-text-details">
                     <h1 class="prod-title">Memuat Data...</h1>
                     <div class="prod-meta">
                         <span class="prod-subtitle">SKU: -</span>
-                        <span class="stock-text"> | Total Stok: <strong id="headerTotalStock">0</strong></span>
+                        <span class="stock-text">
+                            <i class="fa-solid fa-box"></i> Total Stok: <strong id="headerTotalStock">0</strong>
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="header-actions">
-                <button class="btn-outline">Hapus</button>
-                <button class="btn-primary">Edit Produk</button>
+
+            <div class="prod-actions">
+                <button class="btn-outline text-danger">
+                    <i class="fa-regular fa-trash-can"></i> Hapus
+                </button>
+                <button class="btn-primary">
+                    <i class="fa-regular fa-pen-to-square"></i> Edit Produk
+                </button>
             </div>
         </header>
 
         <div class="tabs-wrapper">
             <div class="tabs">
                 <a href="#" class="tab-link active" onclick="switchTab(event, 'info')">Info Produk</a>
-                <a href="#" class="tab-link" onclick="switchTab(event, 'variant')">Varian & Harga</a>
-                <a href="#" class="tab-link" onclick="switchTab(event, 'stock')">Stok & Lokasi</a>
                 <a href="#" class="tab-link" onclick="switchTab(event, 'gallery')">Galeri</a>
+                <a href="#" class="tab-link" onclick="switchTab(event, 'variant')">Varian</a>
+                <a href="#" class="tab-link" onclick="switchTab(event, 'stock')">Stok</a>
+                <a href="#" class="tab-link" onclick="switchTab(event, 'history')">Riwayat</a>
             </div>
         </div>
 
         <main id="tab-info" class="card tab-content">
-            <h3>Informasi Dasar</h3>
-            <div class="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <h3><i class="fa-regular fa-file-lines"></i> Informasi Dasar</h3>
+            <div class="info-grid">
                 <div class="info-group">
-                    <label style="color:#666; font-size:13px;">Nama Produk</label>
-                    <p id="detailName" style="font-weight:600;">-</p>
+                    <label>Nama Produk</label>
+                    <p id="detailName">-</p>
                 </div>
                 <div class="info-group">
-                    <label style="color:#666; font-size:13px;">Kategori</label>
-                    <p id="detailCategory" style="font-weight:600;">-</p>
+                    <label>Kategori</label>
+                    <p id="detailCategory">-</p>
                 </div>
-                <div class="info-group full-width" style="grid-column: span 2;">
-                    <label style="color:#666; font-size:13px;">Deskripsi</label>
-                    <p id="detailDesc" style="font-weight:600;">-</p>
+                <div class="info-group">
+                    <label>Berat (Gram)</label>
+                    <p id="detailWeight">-</p>
+                </div>
+                <div class="info-group">
+                    <label>Dimensi (PxLxT)</label>
+                    <p id="detailDim">-</p>
+                </div>
+                <div class="info-group full-width">
+                    <label>Deskripsi Lengkap</label>
+                    <p id="detailDesc">-</p>
                 </div>
             </div>
         </main>
 
         <main id="tab-variant" class="card tab-content" style="display: none;">
             <div class="card-header-row"
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3>Daftar Varian</h3>
-                <button class="btn-sm btn-outline" onclick="openVariantModal()">+ Varian Baru</button>
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3><i class="fa-solid fa-tags"></i> Daftar Varian</h3>
+                <button class="btn-sm btn-primary" onclick="openVariantModal()">
+                    <i class="fa-solid fa-plus"></i> Varian Baru
+                </button>
             </div>
             <div class="table-responsive">
-                <table style="width: 100%; border-collapse: collapse;">
+                <table>
                     <thead>
-                        <tr style="text-align: left; background: #f9fafb;">
-                            <th style="padding: 10px;">Nama Varian</th>
-                            <th style="padding: 10px;">SKU</th>
-                            <th style="padding: 10px;">Stok</th>
-                            <th style="padding: 10px;">Status</th>
-                            <th style="padding: 10px;">Aksi</th>
+                        <tr>
+                            <th>Nama Varian</th>
+                            <th>SKU</th>
+                            <th>Stok Saat Ini</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="variantTableBody">
@@ -103,14 +140,14 @@
         </main>
 
         <main id="tab-stock" class="card tab-content" style="display: none;">
-            <h3>Posisi Stok</h3>
+            <h3><i class="fa-solid fa-warehouse"></i> Posisi Stok Gudang</h3>
             <div class="table-responsive">
-                <table style="width: 100%; border-collapse: collapse;">
+                <table>
                     <thead>
-                        <tr style="text-align: left; background: #f9fafb;">
-                            <th style="padding: 10px;">SKU</th>
-                            <th style="padding: 10px;">Total Stok</th>
-                            <th style="padding: 10px;">Status</th>
+                        <tr>
+                            <th>SKU / Varian</th>
+                            <th>Total Stok</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="stockTableBody">
@@ -120,26 +157,155 @@
         </main>
 
         <main id="tab-gallery" class="card tab-content" style="display: none;">
-            <h3>Galeri Produk</h3>
-            <div id="galleryGrid" style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <h3><i class="fa-regular fa-images"></i> Galeri Produk</h3>
+
+            <div id="galleryGrid" class="gallery-grid">
+            </div>
+
+            <div
+                style="margin-top: 24px; text-align: center; border: 2px dashed #e5e7eb; padding: 30px; border-radius: 12px; background: #f9fafb;">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 32px; color: #9ca3af; margin-bottom: 10px;"></i>
+                <p style="font-size: 14px; color: var(--text-sub); margin-bottom: 15px;">Drag & Drop gambar di sini atau
+                    klik tombol di bawah</p>
+                <input type="file" id="inputGalleryUpload" style="display: none;" accept="image/*">
+                <button class="btn-outline" onclick="document.getElementById('inputGalleryUpload').click()">Pilih
+                    Gambar</button>
+            </div>
+        </main>
+
+        <main id="tab-history" class="card tab-content" style="display: none;">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Perubahan Stok</h3>
+
+            <div id="historyTimeline" class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker in"></div>
+                    <div class="timeline-content">
+                        <h4>Restock Masuk</h4>
+                        <p>Menambahkan <strong>50 stok</strong> ke varian 'Reguler'</p>
+                        <span class="history-date">12 Jan 2026, 09:30 • Oleh Admin Gudang</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker out"></div>
+                    <div class="timeline-content">
+                        <h4>Penjualan POS #INV-001</h4>
+                        <p>Mengurangi <strong>2 stok</strong> varian 'Jumbo'</p>
+                        <span class="history-date">12 Jan 2026, 10:15 • Oleh Kasir 1</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker edit"></div>
+                    <div class="timeline-content">
+                        <h4>Update Produk</h4>
+                        <p>Mengubah deskripsi dan nama produk</p>
+                        <span class="history-date">10 Jan 2026, 14:00 • Oleh Supervisor</span>
+                    </div>
+                </div>
             </div>
         </main>
 
     </div>
-    <div id="modalVariant" class="modal-overlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center;">
-        <div class="modal-box" style="background: #fff; padding: 25px; border-radius: 12px;">
-            <h3>Kelola Varian</h3>
+    <div id="modalVariant" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Kelola Varian</h3>
+                <button onclick="closeVariantModal()"
+                    style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+            </div>
             <form id="variantForm">
-                <p>Form Varian (Demo)</p>
-                <div style="margin-top: 15px; text-align: right;">
-                    <button type="button" onclick="closeVariantModal()">Tutup</button>
+                <div class="modal-body">
+                    <div class="form-group full-width">
+                        <label>Nama Varian</label>
+                        <input type="text" id="varName" placeholder="Contoh: Merah, XL" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Harga (Rp)</label>
+                        <input type="number" id="varPrice" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>SKU Varian</label>
+                        <input type="text" id="varSku" placeholder="Auto-generate jika kosong">
+                    </div>
+                    <div class="form-group">
+                        <label>Stok Awal</label>
+                        <input type="number" id="varStock" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="toggle-wrap">
+                            <label class="switch">
+                                <input type="checkbox" id="varStatus" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <span id="varStatusLabel">Aktif</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" onclick="closeVariantModal()">Batal</button>
+                    <button type="submit" class="btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalEditVariant" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Edit Varian</h3>
+                <button onclick="closeEditVariantModal()"
+                    style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+            </div>
+            <form id="editVariantForm">
+                <input type="hidden" id="editVarId">
+                <div class="modal-body">
+                    <div class="form-group full-width">
+                        <label>Nama Varian</label>
+                        <input type="text" id="editVarName" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Harga (Rp)</label>
+                            <input type="number" id="editVarPrice" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Stok Saat Ini</label>
+                            <input type="number" id="editVarStock" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>SKU Varian</label>
+                        <input type="text" id="editVarSku" disabled
+                            style="background-color: #f3f4f6; cursor: not-allowed;">
+                        <small style="color: var(--text-sub); font-size: 11px;">SKU tidak dapat diubah</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="toggle-wrap">
+                            <label class="switch">
+                                <input type="checkbox" id="editVarStatus">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="editVarStatusLabel">Aktif</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" onclick="closeEditVariantModal()">Batal</button>
+                    <button type="submit" class="btn-primary">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script src="{{ asset('js/dashboard/product/script.js') }}"></script>
+
 </body>
 
 </html>
