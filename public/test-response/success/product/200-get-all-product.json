@@ -11,11 +11,25 @@
                 "name": "Sego Njamoer Original",
                 "description": "Nasi putih dengan jamur krispi khas Sego Njamoer.",
                 "categories": ["Makanan", "Menu Utama", "Jamur"],
+                "total_stock": 16,
+                "min_stock": 5,
+                "is_variant": true,
+                "variants": [
+                    {
+                        "id": "01KG4VY9XEXYM5WA9B8BBSDSTH",
+                        "sku": "SNJ-SBY-001",
+                        "variant_name": "Reguler"
+                    },
+                    {
+                        "id": "01KG4VYMGB51N4X2KMZ6X47X8W",
+                        "sku": "SNJ-SBY-002",
+                        "variant_name": "Jumbo"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/snj-sby-001.webp",
                     "alt" : "Sego Njamoer Original Gambar 1"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:00:00+07:00",
                 "updated_at": "2026-01-12T09:00:00+07:00"
@@ -25,11 +39,25 @@
                 "name": "Sego Njamoer Sambal Ijo",
                 "description": "Sego Njamoer dengan sambal ijo khas.",
                 "categories": ["Makanan", "Menu Utama", "Pedas"],
+                "total_stock": 7,
+                "min_stock": 5,
+                "is_variant": true,
+                "variants": [
+                    {
+                        "id": "01kgp20p8btd99gr2y1m8cch3v",
+                        "sku": "SNJ-SBY-003",
+                        "variant_name": "Reguler"
+                    },
+                    {
+                        "id": "01kgp20p8cqrc70xxmjtasmqa1",
+                        "sku": "SNJ-SBY-004",
+                        "variant_name": "Pedas"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/snj-sby-002.webp",
                     "alt" : "Sego Njamoer Sambal Ijo"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:01:00+07:00",
                 "updated_at": "2026-01-12T09:01:00+07:00"
@@ -39,11 +67,20 @@
                 "name": "Sego Njamoer Teriyaki",
                 "description": "Jamur saus teriyaki manis gurih.",
                 "categories": ["Makanan", "Menu Utama", "Jamur"],
+                "total_stock": 19,
+                "min_stock": 5,
+                "is_variant": true,
+                "variants": [
+                    {
+                        "id": "01kgp20p8dhtdrvxtcgyw6eb1s",
+                        "sku": "SNJ-SBY-005",
+                        "variant_name": "Reguler"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/snj-sby-003.webp",
                     "alt" : "Sego Njamoer Teriyaki"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:02:00+07:00",
                 "updated_at": "2026-01-12T09:02:00+07:00"
@@ -53,11 +90,25 @@
                 "name": "Jamur Crispy Original",
                 "description": "Jamur krispi gurih tanpa saus.",
                 "categories": ["Snack", "Jamur"],
+                "total_stock": 10,
+                "min_stock": 5,
+                "is_variant": true,
+                "variants": [
+                    {
+                        "id": "01kgp20p8efmwr0mcbwtyb673f",
+                        "sku": "SNJ-SBY-006",
+                        "variant_name": "Small"
+                    },
+                    {
+                        "id": "01kgp20p8fcrw50q0f8kszh4nv",
+                        "sku": "SNJ-SBY-007",
+                        "variant_name": "Large"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/snj-sby-004.webp",
                     "alt" : "Jamur Crispy Original"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:03:00+07:00",
                 "updated_at": "2026-01-12T09:03:00+07:00"
@@ -67,11 +118,25 @@
                 "name": "Jamur Crispy Balado",
                 "description": "Jamur krispi dengan bumbu balado pedas.",
                 "categories": ["Snack", "Pedas", "Jamur"],
+                "total_stock": 0,
+                "min_stock": 5,
+                "is_variant": true,
+                "variants": [
+                    {
+                        "id": "01kgp20p8hqnnv9wfgjmqp6gwa",
+                        "sku": "SNJ-SBY-008",
+                        "variant_name": "Pedas"
+                    },
+                    {
+                        "id": "01kgp20p8j9he54zz5t29z2vdv",
+                        "sku": "SNJ-SBY-009",
+                        "variant_name": "Extra Pedas"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/snj-sby-005.webp",
                     "alt" : "Jamur Crispy Balado"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:04:00+07:00",
                 "updated_at": "2026-01-12T09:04:00+07:00"
@@ -81,11 +146,25 @@
                 "name": "Jamur Saus BBQ",
                 "description": "Jamur krispi dengan saus BBQ.",
                 "categories": ["Snack", "Jamur"],
+                "total_stock": 3,
+                "min_stock": 5,
+                "is_variant": true,
+                "variants": [
+                    {
+                        "id": "01kgp20p8hqnnv9wfgjmqp6gwa",
+                        "sku": "SNJ-SBY-008",
+                        "variant_name": "Pedas"
+                    },
+                    {
+                        "id": "01kgp20p8j9he54zz5t29z2vdv",
+                        "sku": "SNJ-SBY-009",
+                        "variant_name": "Extra Pedas"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/no_image.jpg",
                     "alt" : "Jamur Saus BBQ"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:05:00+07:00",
                 "updated_at": "2026-01-12T09:05:00+07:00"
@@ -95,11 +174,20 @@
                 "name": "Nasi Putih",
                 "description": "Nasi putih hangat.",
                 "categories": ["Tambahan"],
+                "total_stock": 36,
+                "min_stock": 5,
+                "is_variant": false,
+                "variants": [
+                    {
+                        "id": "01KGQ06F9SH3DDHX77VN8EWBDY",
+                        "sku": "SNJ-SBY-010",
+                        "variant_name": "Nasi Putih"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/no_image.jpg",
                     "alt" : "Nasi putih"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:06:00+07:00",
                 "updated_at": "2026-01-12T09:06:00+07:00"
@@ -109,6 +197,20 @@
                 "name": "Es Teh",
                 "description": "Es teh segar.",
                 "categories": ["Minuman"],
+                "total_stock": 35,
+                "min_stock": 5,
+                "variants": [
+                    {
+                        "id": "01KGQ05WS9WEJSPYDJ5ZY7V38E",
+                        "sku": "SNJ-SBY-011",
+                        "variant_name": "Manis"
+                    },
+                    {
+                        "id": "01KGQ061BJ8B5KNEBBTVT3STT0",
+                        "sku": "SNJ-SBY-012",
+                        "variant_name": "Tawar"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/es-teh.jpg",
                     "alt" : "Es Teh"
@@ -123,11 +225,25 @@
                 "name": "Es Jeruk",
                 "description": "Minuman jeruk segar dingin.",
                 "categories": ["Minuman"],
+                "total_stock": 6,
+                "min_stock": 5,
+                "is_variant": true,
+                "variants": [
+                    {
+                        "id": "01KGQ08DAAJSZSH04PGS50D7VH",
+                        "sku": "SNJ-SBY-013",
+                        "variant_name": "Manis"
+                    },
+                    {
+                        "id": "01KGQ08H3Z5VGRKQCW4H7EM65T",
+                        "sku": "SNJ-SBY-014",
+                        "variant_name": "Tanpa Gula"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/es-jeruk.jpg",
                     "alt" : "Es jeruk"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:08:00+07:00",
                 "updated_at": "2026-01-12T09:08:00+07:00"
@@ -137,11 +253,20 @@
                 "name": "Jus Mangga",
                 "description": "Jus mangga segar.",
                 "categories": ["Minuman"],
+                "total_stock": 8,
+                "min_stock": 5,
+                "is_variant": false,
+                "variants": [
+                    {
+                        "id": "01KGQ09RC9M3T2B5WV7GDP2NZ7",
+                        "sku": "SNJ-SBY-015",
+                        "variant_name": "Jus Mangga"
+                    }
+                ],
                 "image": {
                     "url" : "../../asset/img/products/jus-mangga.jpg",
                     "alt" : "Jus Mangga"
                 },
-                "is_variant": true,
                 "is_active": true,
                 "created_at": "2026-01-12T09:09:00+07:00",
                 "updated_at": "2026-01-12T09:09:00+07:00"
