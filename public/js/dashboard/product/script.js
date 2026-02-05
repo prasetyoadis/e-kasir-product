@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.openEditVariantModal(
                         targetVariant.id,
                         targetVariant.variant_name,
-                        targetVariant.sku,
+                        targetVariant.description,
                         targetVariant.price || targetVariant.harga_awal || 0,
                         targetVariant.stock || 0,
                         targetVariant.is_active
