@@ -1,0 +1,222 @@
+{
+    "statusCode": 200,
+    "statusMessage": "OK",
+    "statusDescription": "Request processed successfully",
+    "result": {
+        "errorCode": "31",
+        "errorMessage": "Data retrieved successfully",
+        "data" : [
+            {
+                "id": "01KG4VY9XEXYM5WA9B8BBSDSTH",
+                "sku": "SNJ-SBY-001",
+                "name": "Sego Njamoer Original Reguler",
+                "stock": 16,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-001.webp",
+                    "alt" : "Sego Njamoer Original"
+                }
+            },
+            {
+                "id": "01KG4VYMGB51N4X2KMZ6X47X8W",
+                "sku": "SNJ-SBY-002",
+                "name": "Sego Njamoer Original Jumbo",
+                "stock": 16,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-001.webp",
+                    "alt" : "Sego Njamoer Original"
+                }
+            },
+            {
+                "id": "01kgp20p8btd99gr2y1m8cch3v",
+                "sku": "SNJ-SBY-003",
+                "name": "Sego Njamoer Sambal Ijo Reguler",
+                "stock": 7,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-002.webp",
+                    "alt" : "Sego Njamoer Sambal Ijo"
+                }
+            },
+            {
+                "id": "01kgp20p8cqrc70xxmjtasmqa1",
+                "sku": "SNJ-SBY-004",
+                "name": "Sego Njamoer Sambal Ijo Pedas",
+                "stock": 7,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-002.webp",
+                    "alt" : "Sego Njamoer Sambal Ijo"
+                }
+            },
+            {
+                "id": "01kgp20p8dhtdrvxtcgyw6eb1s",
+                "sku": "SNJ-SBY-005",
+                "name": "Sego Njamoer Teriyaki Reguler",
+                "stock": 19,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-003.webp",
+                    "alt" : "Sego Njamoer Teriyaki"
+                }
+            },
+            {
+                "id": "01kgp20p8efmwr0mcbwtyb673f",
+                "sku": "SNJ-SBY-006",
+                "name": "Jamur Crispy Original Small",
+                "stock": 10,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-004.webp",
+                    "alt" : "Jamur Crispy Original"
+                }
+            },
+            {
+                "id": "01kgp20p8fcrw50q0f8kszh4nv",
+                "sku": "SNJ-SBY-007",
+                "name": "Jamur Crispy Original Large",
+                "stock": 10,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-004.webp",
+                    "alt" : "Jamur Crispy Original"
+                }
+            },
+            {
+                "id": "01kgp20p8hqnnv9wfgjmqp6gwa",
+                "sku": "SNJ-SBY-008",
+                "name": "Jamur Crispy Balado Pedas",
+                "stock": 0,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-005.webp",
+                    "alt" : "Jamur Crispy Balado"
+                }
+            },
+            {
+                "id": "01kgp20p8j9he54zz5t29z2vdv",
+                "sku": "SNJ-SBY-009",
+                "name": "Jamur Crispy Balado Extra Pedas",
+                "stock": 0,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/snj-sby-005.webp",
+                    "alt" : "Jamur Crispy Balado"
+                }
+            },
+            {
+                "id": "01kgp20p8hqnnv9wfgjmqp6gwa",
+                "sku": "SNJ-SBY-008",
+                "name": "Jamur Saus BBQ Pedas",
+                "stock": 3,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/no_image.jpg",
+                    "alt" : "Jamur Saus BBQ"
+                }
+            },
+            {
+                "id": "01kgp20p8j9he54zz5t29z2vdv",
+                "sku": "SNJ-SBY-009",
+                "name": "Jamur Saus BBQ Extra Pedas",
+                "stock": 3,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/no_image.jpg",
+                    "alt" : "Jamur Saus BBQ"
+                }
+            },
+            {
+                "id": "01KGQ06F9SH3DDHX77VN8EWBDY",
+                "sku": "SNJ-SBY-010",
+                "name": "Nasi Putih",
+                "stock": 36,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/no_image.jpg",
+                    "alt" : "Nasi putih"
+                }
+            },
+            {
+                "id": "01KGQ05WS9WEJSPYDJ5ZY7V38E",
+                "sku": "SNJ-SBY-011",
+                "name": "Es Teh Manis",
+                "stock": 35,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/es-teh.jpg",
+                    "alt" : "Es Teh"
+                }
+            },
+            {
+                "id": "01KGQ061BJ8B5KNEBBTVT3STT0",
+                "sku": "SNJ-SBY-012",
+                "name": "Es Teh Tawar",
+                "stock": 35,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/es-teh.jpg",
+                    "alt" : "Es Teh"
+                }
+            },
+            {
+                "id": "01KGQ08DAAJSZSH04PGS50D7VH",
+                "sku": "SNJ-SBY-013",
+                "name": "Es Jeruk Manis",
+                "stock": 6,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/es-jeruk.jpg",
+                    "alt" : "Es jeruk"
+                }
+            },
+            {
+                "id": "01KGQ08H3Z5VGRKQCW4H7EM65T",
+                "sku": "SNJ-SBY-014",
+                "name": "Es Jeruk Tanpa Gula",
+                "stock": 6,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/es-jeruk.jpg",
+                    "alt" : "Es jeruk"
+                }
+            },
+            
+            {
+                "id": "01KGQ09RC9M3T2B5WV7GDP2NZ7",
+                "sku": "SNJ-SBY-015",
+                "name": "Jus Mangga",
+                "stock": 8,
+                "min_stock": 5,
+                "is_active": true,
+                "image": {
+                    "url" : "../../asset/img/products/jus-mangga.jpg",
+                    "alt" : "Jus Mangga"
+                }
+            }
+        ],
+        "meta" : {
+            "current_page" : 1,
+            "per_page" : 10,
+            "total" : 20,
+            "last_page" : 2
+        }
+    }
+}
