@@ -2,7 +2,6 @@
  * ============================================================================
  * 1. GLOBAL FUNCTION: TAB SWITCHING
  * ============================================================================
- * Digunakan di halaman Index (jika ada tab) dan Halaman Detail.
  */
 window.switchTab = function (event, tabName) {
     if (event) event.preventDefault();
@@ -80,14 +79,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // 3. LOGIKA HALAMAN INDEX (DAFTAR PRODUK)
     // ========================================================================
     function initIndexPage(dataList) {
-        let originalData = [...dataList]; // Simpan data asli untuk filter
+        let originalData = [...dataList];
 
         // Elements
         const tableBody = document.getElementById("tableBody");
         const searchInput = document.getElementById("searchInput");
         const filterCategory = document.getElementById("filterCategory") || document.querySelector(".table-filter");
 
-        // Modal Elements (Produk Utama)
+        // Modal Elements
         const modal = document.getElementById("modalForm");
         const modalTitle = document.getElementById("modalTitle");
         const btnTambah = document.getElementById("btnTambah");
@@ -95,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const btnBatal = document.getElementById("btnBatal");
         const productForm = document.getElementById("productForm");
 
-        // Input Form Produk
+        // Input Form
         const inputId = document.getElementById("productId");
         const inputNama = document.getElementById("inputNama");
         const inputKategori = document.getElementById("inputKategori");
@@ -119,9 +118,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
                     : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
-                const dotStock = item.current_stock > 0 ? "bg-green" : "bg-red";
+                // --- PERBAIKAN STOK UNDEFINED DISINI ---
+                // Menggunakan item.total_stock sesuai JSON, bukan current_stock
+                const stockCount = item.total_stock !== undefined ? item.total_stock : 0;
+                const dotStock = stockCount > 0 ? "bg-green" : "bg-red";
+
                 const imgUrl = (item.image && item.image.url) ? item.image.url : "https://via.placeholder.com/56";
                 const category = item.categories ? item.categories[0] : '-';
+
+                // Ambil SKU dari varian pertama jika SKU utama kosong
+                let displaySku = item.sku;
+                if (!displaySku && item.variants && item.variants.length > 0) {
+                    displaySku = item.variants[0].sku;
+                }
+                displaySku = displaySku || '-';
 
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
@@ -130,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <img src="${imgUrl}" class="product-img" onerror="this.src='https://via.placeholder.com/56'">
                             <div class="product-info">
                                 <h4>${item.name}</h4>
-                                <small style="color:#888;">${item.sku || '-'}</small>
+                                <small style="color:#888;">${displaySku}</small>
                             </div>
                         </div>
                     </td>
@@ -139,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="dot ${dotStock}"></span>
-                            <strong>${item.current_stock}</strong>
+                            <strong>${stockCount}</strong>
                         </div>
                     </td>
                     <td>
@@ -152,12 +162,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 tableBody.appendChild(tr);
             });
 
-            // Update Pagination Info
             const pageInfo = document.getElementById("pageInfo");
             if(pageInfo) pageInfo.textContent = `Showing 1 to ${data.length} entries`;
         }
 
-        // --- B. Filter Logic (Search + Category) ---
+        // --- B. Filter Logic ---
         function applyFilters() {
             const keyword = searchInput ? searchInput.value.toLowerCase() : "";
             const category = filterCategory ? filterCategory.value : "";
@@ -177,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (searchInput) searchInput.addEventListener("input", applyFilters);
         if (filterCategory) filterCategory.addEventListener("change", applyFilters);
 
-        // --- C. Modal Logic (Produk Utama) ---
+        // --- C. Modal Logic ---
         function showModal() {
             if(modal) { modal.classList.add("open"); modal.style.display = "flex"; }
         }
@@ -208,7 +217,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // Global Function untuk Edit Produk (Index)
         window.openEditProduct = function(id) {
             const product = originalData.find(p => p.id == id);
             if (!product) return;
@@ -233,7 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
             showModal();
         };
 
-        // Render Awal
         renderTable(dataList);
     }
 
@@ -243,41 +250,34 @@ document.addEventListener("DOMContentLoaded", function () {
     function initDetailPage(detailData) {
         console.log("Detail Data Loaded:", detailData);
 
-        // --- A. Render Header & Info (Versi Bersih: Tanpa SKU & Stok) ---
         const domTitle = document.querySelector(".prod-title");
         const domImg = document.querySelector(".prod-main-img");
 
-        // 1. Set Judul
         if(domTitle) domTitle.textContent = detailData.name;
 
-        // 2. Set Gambar Utama
         if (domImg && detailData.image && detailData.image.length > 0) {
             const defaultImg = detailData.image.find(img => img.is_default) || detailData.image[0];
             domImg.src = defaultImg.url;
         }
 
-        // --- Info Tab Text ---
         const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
         setText("detailName", detailData.name);
         setText("detailCategory", detailData.categories ? detailData.categories.join(", ") : "-");
         setText("detailDesc", detailData.description || "-");
 
 
-        // --- B. RENDER TABEL VARIAN (Dengan Tombol Edit & Parameter Baru) ---
+        // --- B. RENDER TABEL VARIAN ---
         const variantBody = document.getElementById("variantTableBody");
         if (variantBody && detailData.variants) {
             variantBody.innerHTML = "";
             detailData.variants.forEach((v) => {
                 const tr = document.createElement("tr");
-
                 const statusBadge = v.is_active
                     ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
                     : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
-                // DATA PREPARATION FOR EDIT MODAL
                 const safeDesc = (v.description || "").replace(/'/g, "&#39;");
 
-                // Parameter: ID, Nama, Desc, HargaAwal, MinStock, Status
                 const editButton = `
                     <button class="btn-sm btn-outline"
                         onclick="openEditVariantModal('${v.id}', '${v.variant_name}', '${safeDesc}', ${v.harga_awal}, ${v.min_stock}, ${v.is_active})">
@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // --- C. Render Tabel Stok (Overview) ---
+        // --- C. Render Tabel Stok ---
         const stockBody = document.getElementById("stockTableBody");
         if (stockBody && detailData.variants) {
             stockBody.innerHTML = "";
@@ -330,17 +330,14 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // --- E. RENDER TABEL HISTORY (TABEL BARU) ---
+        // --- E. RENDER TABEL HISTORY ---
         const historyBody = document.getElementById("historyTableBody");
         if (historyBody) {
             historyBody.innerHTML = "";
-
-            // 1. Generate Dummy History (Simulasi)
             let dummyHistory = [];
             const variants = detailData.variants || [];
 
             if (variants.length > 0) {
-                // Simulasi Data History
                 dummyHistory.push({ date: "2026-01-10 08:00", sku: variants[0].sku, in: 50, out: 0, total: 50, note: "Restock Awal" });
                 dummyHistory.push({ date: "2026-01-12 14:30", sku: variants[0].sku, in: 0, out: 5, total: 45, note: "Penjualan #INV-001" });
                 if(variants[1]) {
@@ -348,13 +345,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // 2. Render ke Tabel
             if (dummyHistory.length === 0) {
                 historyBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada riwayat stok</td></tr>`;
             } else {
                 dummyHistory.forEach(h => {
                     const tr = document.createElement("tr");
-
                     const inClass = h.in > 0 ? "color: var(--success-text); font-weight:bold;" : "color: #ccc;";
                     const outClass = h.out > 0 ? "color: var(--error-text); font-weight:bold;" : "color: #ccc;";
                     const valIn = h.in > 0 ? `+${h.in}` : "-";
@@ -373,16 +368,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // --- Init Default Tab ---
         initDefaultTab();
     }
 
-    // Fungsi Default Tab (Detail Page)
     function initDefaultTab() {
         const urlParams = new URLSearchParams(window.location.search);
         const tabParam = urlParams.get('tab');
 
-        // Hide all first
         document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
         document.querySelectorAll(".tab-link").forEach(el => el.classList.remove("active"));
 
@@ -391,7 +383,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const activeLink = document.querySelector(`.tab-link[onclick*='${tabParam}']`);
             if (activeLink) activeLink.classList.add('active');
         } else {
-            // Default Info
             window.switchTab(null, 'info');
             const infoLink = document.querySelector(".tab-link[onclick*='info']");
             if (infoLink) infoLink.classList.add('active');
@@ -399,15 +390,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ========================================================================
-    // 5. MODAL LOGIC KHUSUS EDIT VARIAN (UPDATED FIELDS)
+    // 5. MODAL LOGIC KHUSUS EDIT VARIAN
     // ========================================================================
-
-    // Menerima parameter sesuai permintaan: Nama, Desc, Harga Awal, MinStock, Status
     window.openEditVariantModal = function(id, name, desc, hargaAwal, minStock, isActive) {
         const modal = document.getElementById("modalEditVariant");
-
         if(modal) {
-            // Isi Form dengan data dari parameter
             const idInput = document.getElementById("editVarId");
             const nameInput = document.getElementById("editVarName");
             const descInput = document.getElementById("editVarDesc");
@@ -422,12 +409,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if(hargaInput) hargaInput.value = hargaAwal;
             if(minStockInput) minStockInput.value = minStock;
 
-            // Handle Boolean/String logic for status
             const isActiveBool = (isActive === true || isActive === "true");
             if(statusCheck) statusCheck.checked = isActiveBool;
             if(statusLabel) statusLabel.textContent = isActiveBool ? "Aktif" : "Non-Aktif";
 
-            // Tampilkan Modal
             modal.classList.add("open");
             modal.style.display = "flex";
         }
@@ -441,7 +426,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Listener untuk Label Toggle Status Real-time (Modal Varian)
     const editStatusCheck = document.getElementById("editVarStatus");
     const editStatusLabel = document.getElementById("editVarStatusLabel");
     if(editStatusCheck && editStatusLabel) {
@@ -450,15 +434,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Handle Submit Form Varian (Simulasi)
     const editForm = document.getElementById("editVariantForm");
     if(editForm) {
         editForm.addEventListener("submit", function(e) {
             e.preventDefault();
             const newName = document.getElementById("editVarName").value;
-            const newDesc = document.getElementById("editVarDesc").value;
-
-            alert(`Simulasi: Varian '${newName}' berhasil diperbarui!\nDeskripsi: ${newDesc}`);
+            alert(`Simulasi: Varian '${newName}' berhasil diperbarui!`);
             closeEditVariantModal();
         });
     }
