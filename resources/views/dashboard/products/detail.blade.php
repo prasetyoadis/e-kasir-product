@@ -169,36 +169,23 @@
         <main id="tab-history" class="card tab-content" style="display: none;">
             <h3><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Perubahan Stok</h3>
 
-            <div id="historyTimeline" class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker in"></div>
-                    <div class="timeline-content">
-                        <h4>Restock Masuk</h4>
-                        <p>Menambahkan <strong>50 stok</strong> ke varian 'Reguler'</p>
-                        <span class="history-date">12 Jan 2026, 09:30 • Oleh Admin Gudang</span>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker out"></div>
-                    <div class="timeline-content">
-                        <h4>Penjualan POS #INV-001</h4>
-                        <p>Mengurangi <strong>2 stok</strong> varian 'Jumbo'</p>
-                        <span class="history-date">12 Jan 2026, 10:15 • Oleh Kasir 1</span>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker edit"></div>
-                    <div class="timeline-content">
-                        <h4>Update Produk</h4>
-                        <p>Mengubah deskripsi dan nama produk</p>
-                        <span class="history-date">10 Jan 2026, 14:00 • Oleh Supervisor</span>
-                    </div>
-                </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tanggal & Waktu</th>
+                            <th>SKU Varian</th>
+                            <th style="color: var(--success-text);">Stok Masuk</th>
+                            <th style="color: var(--error-text);">Stok Keluar</th>
+                            <th>Total Stok (Akhir)</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                    </tbody>
+                </table>
             </div>
         </main>
-
     </div>
     <div id="modalVariant" class="modal-overlay" style="display: none;">
         <div class="modal-box">

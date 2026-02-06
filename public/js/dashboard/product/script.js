@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Script Loaded & DOM Ready");
 
     // --- KONFIGURASI PATH API ---
-    // Sesuaikan dengan struktur folder public Anda
     const API_PATH_INDEX = "/test-response/success/product/200-get-all-product.json";
     const API_PATH_DETAIL = "/test-response/success/product/200-get-product.json";
 
@@ -120,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
                     : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
-                const dotStock = item.total_stock > 0 ? "bg-green" : "bg-red";
+                const dotStock = item.current_stock > 0 ? "bg-green" : "bg-red";
                 const imgUrl = (item.image && item.image.url) ? item.image.url : "https://via.placeholder.com/56";
                 const category = item.categories ? item.categories[0] : '-';
 
@@ -140,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="dot ${dotStock}"></span>
-                            <strong>${item.total_stock}</strong>
+                            <strong>${item.current_stock}</strong>
                         </div>
                     </td>
                     <td>
@@ -153,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 tableBody.appendChild(tr);
             });
 
-            // Update Pagination Info (Placeholder)
+            // Update Pagination Info
             const pageInfo = document.getElementById("pageInfo");
             if(pageInfo) pageInfo.textContent = `Showing 1 to ${data.length} entries`;
         }
@@ -257,14 +256,14 @@ document.addEventListener("DOMContentLoaded", function () {
             domImg.src = defaultImg.url;
         }
 
-        // --- Info Tab Text (Bagian Bawah) ---
+        // --- Info Tab Text ---
         const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
         setText("detailName", detailData.name);
         setText("detailCategory", detailData.categories ? detailData.categories.join(", ") : "-");
         setText("detailDesc", detailData.description || "-");
 
 
-        // --- B. RENDER TABEL VARIAN (UPDATED: Parameter Edit Baru) ---
+        // --- B. RENDER TABEL VARIAN (Dengan Tombol Edit & Parameter Baru) ---
         const variantBody = document.getElementById("variantTableBody");
         if (variantBody && detailData.variants) {
             variantBody.innerHTML = "";
@@ -276,7 +275,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
 
                 // DATA PREPARATION FOR EDIT MODAL
-                // Escape petik satu pada deskripsi agar tidak merusak HTML onclick
                 const safeDesc = (v.description || "").replace(/'/g, "&#39;");
 
                 // Parameter: ID, Nama, Desc, HargaAwal, MinStock, Status
@@ -331,34 +329,52 @@ document.addEventListener("DOMContentLoaded", function () {
                 galleryGrid.appendChild(card);
             });
         }
-        
-        // --- Init Default Tab ---
-        initDefaultTab();
 
-        // --- AUTO OPEN EDIT VARIANT FROM QUERY PARAM ---
-        const params = new URLSearchParams(window.location.search);
-        const variantIdFromUrl = params.get("variant_id");
+        // --- E. RENDER TABEL HISTORY (TABEL BARU) ---
+        const historyBody = document.getElementById("historyTableBody");
+        if (historyBody) {
+            historyBody.innerHTML = "";
 
-        if (variantIdFromUrl && detailData.variants && detailData.variants.length > 0) {
-            const targetVariant = detailData.variants.find(
-                (v) => String(v.id) === String(variantIdFromUrl)
-            );
+            // 1. Generate Dummy History (Simulasi)
+            let dummyHistory = [];
+            const variants = detailData.variants || [];
 
-            if (targetVariant) {
-                // Delay dikit biar tab & DOM kelar render
-                setTimeout(() => {
-                    window.openEditVariantModal(
-                        targetVariant.id,
-                        targetVariant.variant_name,
-                        targetVariant.description,
-                        targetVariant.price || targetVariant.harga_awal || 0,
-                        targetVariant.stock || 0,
-                        targetVariant.is_active
-                    );
-                }, 300);
+            if (variants.length > 0) {
+                // Simulasi Data History
+                dummyHistory.push({ date: "2026-01-10 08:00", sku: variants[0].sku, in: 50, out: 0, total: 50, note: "Restock Awal" });
+                dummyHistory.push({ date: "2026-01-12 14:30", sku: variants[0].sku, in: 0, out: 5, total: 45, note: "Penjualan #INV-001" });
+                if(variants[1]) {
+                    dummyHistory.push({ date: "2026-01-13 09:00", sku: variants[1].sku, in: 20, out: 0, total: 20, note: "Opname Stok" });
+                }
+            }
+
+            // 2. Render ke Tabel
+            if (dummyHistory.length === 0) {
+                historyBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada riwayat stok</td></tr>`;
+            } else {
+                dummyHistory.forEach(h => {
+                    const tr = document.createElement("tr");
+
+                    const inClass = h.in > 0 ? "color: var(--success-text); font-weight:bold;" : "color: #ccc;";
+                    const outClass = h.out > 0 ? "color: var(--error-text); font-weight:bold;" : "color: #ccc;";
+                    const valIn = h.in > 0 ? `+${h.in}` : "-";
+                    const valOut = h.out > 0 ? `-${h.out}` : "-";
+
+                    tr.innerHTML = `
+                        <td style="color:#666; font-size:13px;">${h.date}</td>
+                        <td style="font-family:monospace; font-weight:600;">${h.sku || '-'}</td>
+                        <td style="${inClass}">${valIn}</td>
+                        <td style="${outClass}">${valOut}</td>
+                        <td><strong>${h.total}</strong></td>
+                        <td style="font-size:13px; color:#555;">${h.note}</td>
+                    `;
+                    historyBody.appendChild(tr);
+                });
             }
         }
 
+        // --- Init Default Tab ---
+        initDefaultTab();
     }
 
     // Fungsi Default Tab (Detail Page)
