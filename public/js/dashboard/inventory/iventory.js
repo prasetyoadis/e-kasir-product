@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     // --- 1. CONFIGURATION ---
-    const API_URL = "/test-response/success/product/200-get-all-product.json";
+    // Mengarah ke file JSON variant yang baru
+    const API_URL =
+        "/test-response/success/product-variant/200-get-all-variant.json";
     const ROWS_PER_PAGE = 5;
+    const DEFAULT_IMAGE = "asset/img/products/no_image.jpg";
 
     // --- STATE MANAGEMENT ---
     let allProductsData = [];
@@ -19,12 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnPrev = document.getElementById("btn-prev");
     const btnNext = document.getElementById("btn-next");
 
-    // Selector Search yang Spesifik
+    // Search & Filter Elements
     const tableSearchInput = document.querySelector(".search-small input");
-    // Selector Tombol Filter
     const filterButtons = document.querySelectorAll(".tab-small");
 
-    // --- DOM ELEMENTS (MODAL) ---
+    // --- DOM ELEMENTS (MODAL ADJUSTMENT) ---
     const modalOverlay = document.getElementById("adjustModal");
     const closeModalBtn = document.getElementById("closeModalBtn");
     const cancelBtn = document.getElementById("cancelBtn");
@@ -37,13 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalCurrentStock = document.getElementById("modalCurrentStock");
     const modalProductIdHidden = document.getElementById("modalProductId");
     const adjustAmountInput = document.getElementById("adjustAmount");
-    const adjustNoteInput = document.getElementById("adjustNote");
 
     // Toggle buttons
     const toggleButtons = document.querySelectorAll(".btn-toggle");
     const adjustmentTypeHidden = document.getElementById("adjustmentType");
-
-    const DEFAULT_IMAGE = "asset/img/products/no_image.jpg";
 
     // --- 3. HELPER FUNCTIONS ---
     function getStatus(stock, minStock) {
@@ -61,29 +60,20 @@ document.addEventListener("DOMContentLoaded", () => {
             return response.json();
         })
         .then((jsonResponse) => {
+            // Mengakses data dari result.data sesuai struktur JSON baru
             const products = jsonResponse.result.data;
 
-            // --- MAPPING DATA ---
-            allProductsData = products.map((product) => {
-                let imageUrl = product?.image?.url || DEFAULT_IMAGE;
-
-                let displaySku = "-";
-                if (product.variants && product.variants.length > 0) {
-                    displaySku = product.variants[0].sku;
-                }
-
-                const stockVal =
-                    product.total_stock !== undefined ? product.total_stock : 0;
-                const minStockVal =
-                    product.min_stock !== undefined ? product.min_stock : 0;
+            // --- MAPPING DATA (Disesuaikan dengan JSON Varian) ---
+            allProductsData = products.map((item) => {
+                let imageUrl = item.image?.url || DEFAULT_IMAGE;
 
                 return {
-                    id: product.id,
-                    name: product.name,
-                    sku: displaySku,
+                    id: item.id,
+                    name: item.name, // Nama sudah lengkap (cth: "Sego Njamoer Original Reguler")
+                    sku: item.sku,
                     image: imageUrl,
-                    min_stock: minStockVal,
-                    stock: stockVal,
+                    min_stock: item.min_stock || 0,
+                    stock: item.stock || 0,
                 };
             });
 
@@ -101,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function applyGlobalFilters() {
         let tempData = [...allProductsData];
 
+        // Filter by Status Tab
         if (currentFilterType === "low") {
             tempData = tempData.filter(
                 (item) => item.stock <= item.min_stock && item.stock > 0,
@@ -109,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tempData = tempData.filter((item) => item.stock === 0);
         }
 
+        // Filter by Search
         if (currentSearchQuery) {
             const query = currentSearchQuery.toLowerCase();
             tempData = tempData.filter(
@@ -123,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderPagination(filteredData, tableBody, ROWS_PER_PAGE, currentPage);
     }
 
+    // Event Listener Search
     if (tableSearchInput) {
         tableSearchInput.addEventListener("keyup", (e) => {
             currentSearchQuery = e.target.value;
@@ -130,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Event Listener Filter Tabs
     filterButtons.forEach((btn) => {
         btn.addEventListener("click", (e) => {
             filterButtons.forEach((b) => b.classList.remove("active"));
@@ -151,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- 6. PAGINATION RENDERER ---
+    // --- 6. PAGINATION RENDERER (SESUAI GAMBAR) ---
     function renderPagination(items, wrapper, rows_per_page, page) {
         if (!wrapper) return;
         wrapper.innerHTML = "";
@@ -175,13 +169,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const row = document.createElement("tr");
 
-            // --- BAGIAN YANG DIUPDATE ---
-            // 1. SKU dihilangkan dari dalam <div class="product-info">
-            // 2. Tombol Detail dihilangkan dari kolom terakhir
+            // --- STRUKTUR KOLOM SESUAI GAMBAR ---
+            // 1. Produk (Img + Name)
+            // 2. SKU
+            // 3. Stok (+ Status Dot)
+            // 4. Min Stok
+            // 5. Status Badge
+            // 6. Action (Adjust Button Only)
+
             row.innerHTML = `
                 <td>
                     <div class="product-cell">
-                        <img src="${item.image}" alt="${item.name}" class="product-img" onerror="this.onerror=null;this.src='asset/img/products/no_image.jpg';">
+                        <img src="${item.image}" alt="${item.name}" class="product-img" onerror="this.src='${DEFAULT_IMAGE}'">
                         <div class="product-info">
                             <div>${item.name}</div>
                         </div>
@@ -213,6 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btnNext) btnNext.disabled = currentPage === totalPages;
     }
 
+    // Pagination Click Events
     if (btnPrev) {
         btnPrev.addEventListener("click", () => {
             if (currentPage > 1) {
@@ -242,6 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Update Top Stats
     function updateStats(data) {
         if (totalProductsEl) totalProductsEl.innerText = data.length;
         if (lowStockCountEl)
@@ -276,8 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (modalImg) {
             modalImg.src = product.image;
-            modalImg.onerror = () =>
-                (modalImg.src = "asset/img/products/no_image.jpg");
+            modalImg.onerror = () => (modalImg.src = DEFAULT_IMAGE);
         }
         if (modalName) modalName.textContent = product.name;
         if (modalSku) modalSku.textContent = product.sku;
@@ -300,6 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Logic Tombol Toggle (Tambah/Kurang)
     toggleButtons.forEach((btn) => {
         btn.addEventListener("click", (e) => {
             toggleButtons.forEach((b) => b.classList.remove("active"));
@@ -317,6 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (adjustmentTypeHidden) adjustmentTypeHidden.value = "add";
     }
 
+    // Handle Simpan Adjustment (Simulasi Alert)
     if (saveBtn) {
         saveBtn.addEventListener("click", () => {
             const productId = modalProductIdHidden.value;
@@ -332,6 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
             alert(
                 `Berhasil ${actionText} stok produk ID ${productId} sebanyak ${amount}.`,
             );
+
+            // Di sini nanti bisa ditambahkan logic update data ke server
             closeModal();
         });
     }
