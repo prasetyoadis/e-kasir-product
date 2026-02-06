@@ -76,6 +76,41 @@ body {
     font-size: 0.9rem;
 }
 
+/* Pastikan cat-item menggunakan flexbox agar tombol ada di kanan */
+.cat-item {
+    display: flex;
+    justify-content: space-between; /* Teks di kiri, Tombol di kanan */
+    align-items: center;
+    padding: 12px 15px; /* Sesuaikan padding */
+    border-bottom: 1px solid var(--border-line);
+    cursor: pointer;
+}
+
+/* Container untuk tombol Edit & Hapus di sidebar */
+.sidebar-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Tombol kecil di sidebar */
+.btn-mini {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.btn-mini:hover {
+    color: var(--color-gold);
+}
+
+.btn-mini.delete:hover {
+    color: var(--color-clay-red);
+}
+
 /* =========================================
    MAIN LAYOUT
    ========================================= */
