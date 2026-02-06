@@ -37,8 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Script Loaded & DOM Ready");
 
     // --- KONFIGURASI PATH API ---
-    const API_PATH_INDEX = "/test-response/success/product/200-get-all-product.json";
-    const API_PATH_DETAIL = "/test-response/success/product/200-get-product.json";
+    const API_PATH_INDEX =
+        "/test-response/success/product/200-get-all-product.json";
+    const API_PATH_DETAIL =
+        "/test-response/success/product/200-get-product.json";
 
     // --- DETEKSI HALAMAN ---
     const isIndexPage = document.getElementById("tableBody") !== null;
@@ -48,8 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (isIndexPage) {
         console.log("Mode: Halaman List Produk");
         fetchData(API_PATH_INDEX, initIndexPage);
-    }
-    else if (isDetailPage) {
+    } else if (isDetailPage) {
         console.log("Mode: Halaman Detail Produk");
         fetchData(API_PATH_DETAIL, initDetailPage);
     }
@@ -70,8 +71,10 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch((err) => {
                 console.error("Fetch Error:", err);
-                if(isDetailPage) alert("Gagal memuat data: " + err.message);
-                if(isIndexPage) document.getElementById("tableBody").innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">${err.message}</td></tr>`;
+                if (isDetailPage) alert("Gagal memuat data: " + err.message);
+                if (isIndexPage)
+                    document.getElementById("tableBody").innerHTML =
+                        `<tr><td colspan="5" style="text-align:center; color:red;">${err.message}</td></tr>`;
             });
     }
 
@@ -84,7 +87,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Elements
         const tableBody = document.getElementById("tableBody");
         const searchInput = document.getElementById("searchInput");
-        const filterCategory = document.getElementById("filterCategory") || document.querySelector(".table-filter");
+        const filterCategory =
+            document.getElementById("filterCategory") ||
+            document.querySelector(".table-filter");
 
         // Modal Elements
         const modal = document.getElementById("modalForm");
@@ -102,7 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const inputStatus = document.getElementById("inputStatus");
         const statusLabel = document.getElementById("statusLabel");
         const imagePreview = document.getElementById("imagePreview");
-        const previewContainer = document.getElementById("imagePreviewContainer");
+        const previewContainer = document.getElementById(
+            "imagePreviewContainer",
+        );
 
         // --- A. Render Tabel ---
         function renderTable(data) {
@@ -120,18 +127,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // --- PERBAIKAN STOK UNDEFINED DISINI ---
                 // Menggunakan item.total_stock sesuai JSON, bukan current_stock
-                const stockCount = item.total_stock !== undefined ? item.total_stock : 0;
+                const stockCount =
+                    item.total_stock !== undefined ? item.total_stock : 0;
                 const dotStock = stockCount > 0 ? "bg-green" : "bg-red";
 
-                const imgUrl = (item.image && item.image.url) ? item.image.url : "https://via.placeholder.com/56";
-                const category = item.categories ? item.categories[0] : '-';
+                const imgUrl =
+                    item.image && item.image.url
+                        ? item.image.url
+                        : "https://via.placeholder.com/56";
+                const category = item.categories ? item.categories[0] : "-";
 
                 // Ambil SKU dari varian pertama jika SKU utama kosong
                 let displaySku = item.sku;
                 if (!displaySku && item.variants && item.variants.length > 0) {
                     displaySku = item.variants[0].sku;
                 }
-                displaySku = displaySku || '-';
+                displaySku = displaySku || "-";
 
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
@@ -163,7 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             const pageInfo = document.getElementById("pageInfo");
-            if(pageInfo) pageInfo.textContent = `Showing 1 to ${data.length} entries`;
+            if (pageInfo)
+                pageInfo.textContent = `Showing 1 to ${data.length} entries`;
         }
 
         // --- B. Filter Logic ---
@@ -171,11 +183,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const keyword = searchInput ? searchInput.value.toLowerCase() : "";
             const category = filterCategory ? filterCategory.value : "";
 
-            const filtered = originalData.filter(item => {
+            const filtered = originalData.filter((item) => {
                 const matchName = item.name.toLowerCase().includes(keyword);
                 let matchCat = true;
                 if (category && category !== "") {
-                    matchCat = item.categories && item.categories.includes(category);
+                    matchCat =
+                        item.categories && item.categories.includes(category);
                 }
                 return matchName && matchCat;
             });
@@ -184,59 +197,73 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (searchInput) searchInput.addEventListener("input", applyFilters);
-        if (filterCategory) filterCategory.addEventListener("change", applyFilters);
+        if (filterCategory)
+            filterCategory.addEventListener("change", applyFilters);
 
         // --- C. Modal Logic ---
         function showModal() {
-            if(modal) { modal.classList.add("open"); modal.style.display = "flex"; }
+            if (modal) {
+                modal.classList.add("open");
+                modal.style.display = "flex";
+            }
         }
         function hideModal() {
-            if(modal) { modal.classList.remove("open"); modal.style.display = "none"; }
+            if (modal) {
+                modal.classList.remove("open");
+                modal.style.display = "none";
+            }
         }
         function resetForm() {
-            if(productForm) productForm.reset();
-            if(inputId) inputId.value = "";
-            if(imagePreview) imagePreview.src = "";
-            if(previewContainer) previewContainer.style.display = "none";
-            if(inputStatus) inputStatus.checked = true;
-            if(statusLabel) statusLabel.textContent = "Aktif";
+            if (productForm) productForm.reset();
+            if (inputId) inputId.value = "";
+            if (imagePreview) imagePreview.src = "";
+            if (previewContainer) previewContainer.style.display = "none";
+            if (inputStatus) inputStatus.checked = true;
+            if (statusLabel) statusLabel.textContent = "Aktif";
         }
 
-        if (btnTambah) btnTambah.addEventListener("click", () => {
-            resetForm();
-            if(modalTitle) modalTitle.textContent = "Tambah Produk";
-            showModal();
-        });
+        if (btnTambah)
+            btnTambah.addEventListener("click", () => {
+                resetForm();
+                if (modalTitle) modalTitle.textContent = "Tambah Produk";
+                showModal();
+            });
 
         if (btnClose) btnClose.addEventListener("click", hideModal);
         if (btnBatal) btnBatal.addEventListener("click", hideModal);
 
         if (inputStatus) {
-            inputStatus.addEventListener("change", function() {
-                if(statusLabel) statusLabel.textContent = this.checked ? "Aktif" : "Nonaktif";
+            inputStatus.addEventListener("change", function () {
+                if (statusLabel)
+                    statusLabel.textContent = this.checked
+                        ? "Aktif"
+                        : "Nonaktif";
             });
         }
 
-        window.openEditProduct = function(id) {
-            const product = originalData.find(p => p.id == id);
+        window.openEditProduct = function (id) {
+            const product = originalData.find((p) => p.id == id);
             if (!product) return;
 
             resetForm();
-            if(modalTitle) modalTitle.textContent = "Edit Produk";
+            if (modalTitle) modalTitle.textContent = "Edit Produk";
 
-            if(inputId) inputId.value = product.id;
-            if(inputNama) inputNama.value = product.name;
-            if(inputDesc) inputDesc.value = product.description || "";
-            if(inputKategori && product.categories) inputKategori.value = product.categories[0];
+            if (inputId) inputId.value = product.id;
+            if (inputNama) inputNama.value = product.name;
+            if (inputDesc) inputDesc.value = product.description || "";
+            if (inputKategori && product.categories)
+                inputKategori.value = product.categories[0];
 
-            if(inputStatus) {
+            if (inputStatus) {
                 inputStatus.checked = product.is_active;
-                statusLabel.textContent = product.is_active ? "Aktif" : "Nonaktif";
+                statusLabel.textContent = product.is_active
+                    ? "Aktif"
+                    : "Nonaktif";
             }
 
             if (product.image && product.image.url) {
-                 if(imagePreview) imagePreview.src = product.image.url;
-                 if(previewContainer) previewContainer.style.display = "block";
+                if (imagePreview) imagePreview.src = product.image.url;
+                if (previewContainer) previewContainer.style.display = "block";
             }
             showModal();
         };
@@ -253,18 +280,25 @@ document.addEventListener("DOMContentLoaded", function () {
         const domTitle = document.querySelector(".prod-title");
         const domImg = document.querySelector(".prod-main-img");
 
-        if(domTitle) domTitle.textContent = detailData.name;
+        if (domTitle) domTitle.textContent = detailData.name;
 
         if (domImg && detailData.image && detailData.image.length > 0) {
-            const defaultImg = detailData.image.find(img => img.is_default) || detailData.image[0];
+            const defaultImg =
+                detailData.image.find((img) => img.is_default) ||
+                detailData.image[0];
             domImg.src = defaultImg.url;
         }
 
-        const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+        const setText = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        };
         setText("detailName", detailData.name);
-        setText("detailCategory", detailData.categories ? detailData.categories.join(", ") : "-");
+        setText(
+            "detailCategory",
+            detailData.categories ? detailData.categories.join(", ") : "-",
+        );
         setText("detailDesc", detailData.description || "-");
-
 
         // --- B. RENDER TABEL VARIAN ---
         const variantBody = document.getElementById("variantTableBody");
@@ -287,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 tr.innerHTML = `
                     <td><strong>${v.variant_name}</strong></td>
-                    <td>${v.sku || '-'}</td>
+                    <td>${v.sku || "-"}</td>
                     <td>${v.stock} pcs</td>
                     <td>${statusBadge}</td>
                     <td style="text-align:right">${editButton}</td>
@@ -296,16 +330,17 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-
         // --- C. Render Tabel Stok ---
         const stockBody = document.getElementById("stockTableBody");
         if (stockBody && detailData.variants) {
             stockBody.innerHTML = "";
             detailData.variants.forEach((v) => {
                 const tr = document.createElement("tr");
-                const statusBadge = v.is_active ? `<span class="badge badge-active">Aktif</span>` : `<span class="badge badge-inactive">Nonaktif</span>`;
+                const statusBadge = v.is_active
+                    ? `<span class="badge badge-active">Aktif</span>`
+                    : `<span class="badge badge-inactive">Nonaktif</span>`;
                 tr.innerHTML = `
-                    <td style="font-family:monospace">${v.sku || '-'}</td>
+                    <td style="font-family:monospace">${v.sku || "-"}</td>
                     <td><strong>${v.stock}</strong></td>
                     <td>${statusBadge}</td>
                 `;
@@ -313,18 +348,17 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-
         // --- D. Render Galeri ---
         const galleryGrid = document.getElementById("galleryGrid");
         if (galleryGrid && detailData.image) {
             galleryGrid.innerHTML = "";
-            detailData.image.forEach(img => {
+            detailData.image.forEach((img) => {
                 const card = document.createElement("div");
                 card.className = "img-card";
                 card.innerHTML = `
                     <div class="img-thumb-wrapper">
                         <img src="${img.url}" class="img-thumb">
-                        ${img.is_default ? '<span class="default-badge">Default</span>' : ''}
+                        ${img.is_default ? '<span class="default-badge">Default</span>' : ""}
                     </div>`;
                 galleryGrid.appendChild(card);
             });
@@ -338,26 +372,53 @@ document.addEventListener("DOMContentLoaded", function () {
             const variants = detailData.variants || [];
 
             if (variants.length > 0) {
-                dummyHistory.push({ date: "2026-01-10 08:00", sku: variants[0].sku, in: 50, out: 0, total: 50, note: "Restock Awal" });
-                dummyHistory.push({ date: "2026-01-12 14:30", sku: variants[0].sku, in: 0, out: 5, total: 45, note: "Penjualan #INV-001" });
-                if(variants[1]) {
-                    dummyHistory.push({ date: "2026-01-13 09:00", sku: variants[1].sku, in: 20, out: 0, total: 20, note: "Opname Stok" });
+                dummyHistory.push({
+                    date: "2026-01-10 08:00",
+                    sku: variants[0].sku,
+                    in: 50,
+                    out: 0,
+                    total: 50,
+                    note: "Restock Awal",
+                });
+                dummyHistory.push({
+                    date: "2026-01-12 14:30",
+                    sku: variants[0].sku,
+                    in: 0,
+                    out: 5,
+                    total: 45,
+                    note: "Penjualan #INV-001",
+                });
+                if (variants[1]) {
+                    dummyHistory.push({
+                        date: "2026-01-13 09:00",
+                        sku: variants[1].sku,
+                        in: 20,
+                        out: 0,
+                        total: 20,
+                        note: "Opname Stok",
+                    });
                 }
             }
 
             if (dummyHistory.length === 0) {
                 historyBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada riwayat stok</td></tr>`;
             } else {
-                dummyHistory.forEach(h => {
+                dummyHistory.forEach((h) => {
                     const tr = document.createElement("tr");
-                    const inClass = h.in > 0 ? "color: var(--success-text); font-weight:bold;" : "color: #ccc;";
-                    const outClass = h.out > 0 ? "color: var(--error-text); font-weight:bold;" : "color: #ccc;";
+                    const inClass =
+                        h.in > 0
+                            ? "color: var(--success-text); font-weight:bold;"
+                            : "color: #ccc;";
+                    const outClass =
+                        h.out > 0
+                            ? "color: var(--error-text); font-weight:bold;"
+                            : "color: #ccc;";
                     const valIn = h.in > 0 ? `+${h.in}` : "-";
                     const valOut = h.out > 0 ? `-${h.out}` : "-";
 
                     tr.innerHTML = `
                         <td style="color:#666; font-size:13px;">${h.date}</td>
-                        <td style="font-family:monospace; font-weight:600;">${h.sku || '-'}</td>
+                        <td style="font-family:monospace; font-weight:600;">${h.sku || "-"}</td>
                         <td style="${inClass}">${valIn}</td>
                         <td style="${outClass}">${valOut}</td>
                         <td><strong>${h.total}</strong></td>
@@ -373,28 +434,84 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function initDefaultTab() {
         const urlParams = new URLSearchParams(window.location.search);
-        const tabParam = urlParams.get('tab');
+        const tabParam = urlParams.get("tab");
+        const variantIdParam = urlParams.get("variant_id"); // 1. Ambil ID Varian dari URL
 
-        document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
-        document.querySelectorAll(".tab-link").forEach(el => el.classList.remove("active"));
+        // Reset semua tab
+        document
+            .querySelectorAll(".tab-content")
+            .forEach((el) => (el.style.display = "none"));
+        document
+            .querySelectorAll(".tab-link")
+            .forEach((el) => el.classList.remove("active"));
 
+        // Logic Pindah Tab
         if (tabParam) {
             window.switchTab(null, tabParam);
-            const activeLink = document.querySelector(`.tab-link[onclick*='${tabParam}']`);
-            if (activeLink) activeLink.classList.add('active');
+            const activeLink = document.querySelector(
+                `.tab-link[onclick*='${tabParam}']`,
+            );
+            if (activeLink) activeLink.classList.add("active");
+
+            // --- BARU: LOGIKA AUTO-OPEN MODAL ---
+            if (tabParam === "variant" && variantIdParam) {
+                console.log(
+                    "Mencoba membuka otomatis varian ID:",
+                    variantIdParam,
+                );
+
+                // Beri sedikit jeda agar tabel varian selesai dirender dulu
+                setTimeout(() => {
+                    // Cari tombol edit yang onclick-nya mengandung ID varian tersebut
+                    // Kita cari elemen yang mengandung text ID varian di dalam atribut onclick
+                    const editBtns = document.querySelectorAll(
+                        "#variantTableBody button",
+                    );
+                    let targetBtn = null;
+
+                    editBtns.forEach((btn) => {
+                        const onClickText = btn.getAttribute("onclick");
+                        // Cek apakah ID varian ada di dalam string onclick
+                        if (
+                            onClickText &&
+                            onClickText.includes(`'${variantIdParam}'`)
+                        ) {
+                            targetBtn = btn;
+                        }
+                    });
+
+                    if (targetBtn) {
+                        targetBtn.click(); // KLIK OTOMATIS
+                    } else {
+                        console.warn(
+                            "Tombol edit untuk varian ini tidak ditemukan.",
+                        );
+                    }
+                }, 800); // Delay 0.8 detik (cukup aman untuk menunggu render)
+            }
+            // ------------------------------------
         } else {
-            window.switchTab(null, 'info');
-            const infoLink = document.querySelector(".tab-link[onclick*='info']");
-            if (infoLink) infoLink.classList.add('active');
+            // Default ke tab info jika tidak ada parameter
+            window.switchTab(null, "info");
+            const infoLink = document.querySelector(
+                ".tab-link[onclick*='info']",
+            );
+            if (infoLink) infoLink.classList.add("active");
         }
     }
-
     // ========================================================================
     // 5. MODAL LOGIC KHUSUS EDIT VARIAN
     // ========================================================================
-    window.openEditVariantModal = function(id, name, desc, hargaAwal, minStock, isActive) {
+    window.openEditVariantModal = function (
+        id,
+        name,
+        desc,
+        hargaAwal,
+        minStock,
+        isActive,
+    ) {
         const modal = document.getElementById("modalEditVariant");
-        if(modal) {
+        if (modal) {
             const idInput = document.getElementById("editVarId");
             const nameInput = document.getElementById("editVarName");
             const descInput = document.getElementById("editVarDesc");
@@ -403,24 +520,25 @@ document.addEventListener("DOMContentLoaded", function () {
             const statusCheck = document.getElementById("editVarStatus");
             const statusLabel = document.getElementById("editVarStatusLabel");
 
-            if(idInput) idInput.value = id;
-            if(nameInput) nameInput.value = name;
-            if(descInput) descInput.value = desc;
-            if(hargaInput) hargaInput.value = hargaAwal;
-            if(minStockInput) minStockInput.value = minStock;
+            if (idInput) idInput.value = id;
+            if (nameInput) nameInput.value = name;
+            if (descInput) descInput.value = desc;
+            if (hargaInput) hargaInput.value = hargaAwal;
+            if (minStockInput) minStockInput.value = minStock;
 
-            const isActiveBool = (isActive === true || isActive === "true");
-            if(statusCheck) statusCheck.checked = isActiveBool;
-            if(statusLabel) statusLabel.textContent = isActiveBool ? "Aktif" : "Non-Aktif";
+            const isActiveBool = isActive === true || isActive === "true";
+            if (statusCheck) statusCheck.checked = isActiveBool;
+            if (statusLabel)
+                statusLabel.textContent = isActiveBool ? "Aktif" : "Non-Aktif";
 
             modal.classList.add("open");
             modal.style.display = "flex";
         }
     };
 
-    window.closeEditVariantModal = function() {
+    window.closeEditVariantModal = function () {
         const modal = document.getElementById("modalEditVariant");
-        if(modal) {
+        if (modal) {
             modal.classList.remove("open");
             modal.style.display = "none";
         }
@@ -428,15 +546,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const editStatusCheck = document.getElementById("editVarStatus");
     const editStatusLabel = document.getElementById("editVarStatusLabel");
-    if(editStatusCheck && editStatusLabel) {
-        editStatusCheck.addEventListener("change", function() {
+    if (editStatusCheck && editStatusLabel) {
+        editStatusCheck.addEventListener("change", function () {
             editStatusLabel.textContent = this.checked ? "Aktif" : "Non-Aktif";
         });
     }
 
     const editForm = document.getElementById("editVariantForm");
-    if(editForm) {
-        editForm.addEventListener("submit", function(e) {
+    if (editForm) {
+        editForm.addEventListener("submit", function (e) {
             e.preventDefault();
             const newName = document.getElementById("editVarName").value;
             alert(`Simulasi: Varian '${newName}' berhasil diperbarui!`);
