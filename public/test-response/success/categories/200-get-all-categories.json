@@ -7,6 +7,14 @@
         "errorMessage": "Data retrieved successfully",
         "data": [
             {
+                "id": "01kgrjjx2r2ncedha1p1zmvk16",
+                "name": "Menu Utama",
+                "slug": "menu-utama",
+                "description": "Menu Makanan Utama",
+                "created_at": "2026-01-31T05:53:20.000000Z",
+                "updated_at": "2026-01-31T05:53:20.000000Z"
+            },
+            {
                 "id": "01kg99svhqwvzev115z39nj09j",
                 "name": "Makanan",
                 "slug": "makanan",
@@ -19,6 +27,14 @@
                 "name": "Minuman",
                 "slug": "minuman",
                 "description": "Minuman",
+                "created_at": "2026-01-31T05:53:20.000000Z",
+                "updated_at": "2026-01-31T05:53:20.000000Z"
+            },
+            {
+                "id": "01kgrjkth6ewsxx8xty2gj1rjt",
+                "name": "Jamur",
+                "slug": "jamur",
+                "description": "Menu Makanan dengan bahan jamur",
                 "created_at": "2026-01-31T05:53:20.000000Z",
                 "updated_at": "2026-01-31T05:53:20.000000Z"
             },
@@ -37,12 +53,20 @@
                 "description": "Makanan ringan",
                 "created_at": "2026-01-31T05:53:20.000000Z",
                 "updated_at": "2026-01-31T05:53:20.000000Z"
+            },
+            {
+                "id": "01kgrjm97tk70d88h58tscjcxh",
+                "name": "Tambahan",
+                "slug": "tambahan",
+                "description": "Tambahan pendamping",
+                "created_at": "2026-01-31T05:53:20.000000Z",
+                "updated_at": "2026-01-31T05:53:20.000000Z"
             }
         ],
         "meta": {
             "current_page": 1,
             "per_page": 7,
-            "total": 4,
+            "total": 7,
             "last_page": 1
         }
     }
