@@ -1,31 +1,16 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kassia - Manajemen Kategori</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Konten -->
+ @extends('layouts.main-dashboard')
+
+@section('css')
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="{{ asset('css/category.css') }}">
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="logo">
-            <img src="{{ asset('asset/img/kassia-logo-transparent.webp') }}" alt="Kassia">
-            <span>Kassia</span>
-        </div>
-        
-        <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search category...">
-        </div>
-    </nav>
-
-    <main class="container">
-        
+   
+@endsection
+<!-- section Konten -->
+ @section('content')
+ 
         <div class="page-header">
             <h1>Manajemen Kategori</h1>
             <button class="btn-primary" id="addCategoryBtn">
@@ -71,8 +56,9 @@
             </div>
         </div>
 
-    </main>
+ @endsection
 
-    <script src="{{ asset('js/dashboard/category/category.js') }}"></script>
-</body>
-</html>
+ @section('js')
+ <script src="{{ asset('js/dashboard/category/category.js') }}"></script>
+ @endsection
+    
