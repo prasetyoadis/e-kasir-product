@@ -1,29 +1,17 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kassia - Stock Overview</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Extends -->
+@extends('layouts.main-dashboard')
+
+<!-- CSS -->
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/iventory.css') }}">
-</head>
-<body>
+@endsection
 
-    <nav class="navbar">
-        <div class="logo">
-            <img src="../asset/img/kassia-logo-transparent.webp" alt="Kassia Logo" class="logo-img">
-            <span>Kassia</span>
-        </div>
-        <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search product...">
-        </div>
-    </nav>
+<!-- Konten -->
+@section('content')
 
-    <main class="container">
-        
-        <div class="page-header">
+<div class="page-header">
             <h1>Stock Overview</h1>
             <button class="btn-primary">
                 <i class="fa-solid fa-plus"></i> Adjustment <i class="fa-solid fa-sliders"></i>
@@ -112,8 +100,7 @@
 </div>
         </div>
 
-    </main>
-      <div id="adjustModal" class="modal-overlay">
+        <div id="adjustModal" class="modal-overlay">
         <div class="modal-container">
             <div class="modal-header">
                 <h3>Penyesuaian Stok</h3>
@@ -169,7 +156,10 @@
             </div>
         </div>
     </div>
+@endsection
 
-    <script src="{{ asset('js/dashboard/inventory/iventory.js') }}"></script>
-</body>
-</html>
+<!-- JS-->
+@section('js')
+<script src="{{ asset('js/dashboard/inventory/iventory.js') }}"></script>
+@endsection
+    

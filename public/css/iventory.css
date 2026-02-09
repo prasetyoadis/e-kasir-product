@@ -54,7 +54,7 @@ body {
     color: var(--text-main);
 }
 
-.logo-img {
+.logo img {
     height: 40px;
     width: auto;
     margin-right: 10px;
