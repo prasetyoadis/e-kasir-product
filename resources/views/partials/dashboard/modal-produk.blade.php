@@ -13,20 +13,32 @@
                     <label>Nama Produk</label>
                     <input type="text" id="inputNama" required placeholder="Contoh: Nasi Goreng">
                 </div>
-
-                <div class="form-group">
+                {{-- SKU --}}
+                <div id="skuField" class="form-group full-width">
+                    <label>SKU</label>
+                    <input
+                        type="text"
+                        id="inputSKU"
+                        class="form-control"
+                        placeholder="Contoh: SKU-001"
+                    >
+                </div>
+                
+                <div id="gambarField" class="form-group">
                     <label>Gambar Produk</label>
-
-                    <div id="imagePreviewContainer" style="margin-bottom: 10px; display: none;">
-                        <img id="imagePreview" src="" alt="Preview"
-                            style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                    <div class="" style="display:flex; gap:12px">
+                        <div id="imagePreviewContainer" style="with:auto, margin-bottom: 10px; display: none;">
+                            <img id="imagePreview" src="" alt="Preview"
+                                style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                        </div>
+                        <div class="">
+                            <input type="file" id="inputImage" accept="image/*">
+                            <small style="color: #6B7280; font-size: 12px; margin-top: 4px;">Format: JPG, PNG, WEBP</small>
+                        </div>
                     </div>
-
-                    <input type="file" id="inputImage" accept="image/*">
-                    <small style="color: #6B7280; font-size: 12px; margin-top: 4px;">Format: JPG, PNG, WEBP</small>
                 </div>
 
-                <div class="form-group">
+                <div id="statusField" class="form-group">
                     <label>Status</label>
                     <div class="toggle-wrap">
                         <label class="switch">
@@ -47,6 +59,21 @@
                     </select>
                 </div>
 
+                <div id="variantField" class="form-group">
+                    <label>Punya Variant?</label>
+                    <div class="toggle-wrap">
+                        <label class="switch">
+                            <input type="checkbox" id="inputVariant">
+                            <span class="slider"></span>
+                        </label>
+                        <span id="variantLabel">Tidak</span>
+                    </div>
+                </div>
+                <div id="hppField" class="form-group">
+                    <label>Harga Awal (Rp)</label>
+                    <input type="number" id="inputHpp">
+                    <small style="color: var(--text-sub); font-size: 11px;">*Harga modal/dasar</small>
+                </div>
                 <div class="form-group full-width">
                     <label>Deskripsi</label>
                     <textarea id="inputDesc" rows="3" placeholder="Tulis deskripsi produk di sini..."

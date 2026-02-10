@@ -13,9 +13,9 @@
 
 <div class="page-header">
             <h1>Stock Overview</h1>
-            <button class="btn-primary">
+            {{-- <button class="btn-primary">
                 <i class="fa-solid fa-plus"></i> Adjustment <i class="fa-solid fa-sliders"></i>
-            </button>
+            </button> --}}
         </div>
 
         <div class="stats-grid">
@@ -52,11 +52,11 @@
             <div class="card daily-stats">
                 <div class="stat-row">
                     <span class="text-green"><i class="fa-solid fa-arrow-up"></i> Restock Hari Ini</span>
-                    <span class="stat-value text-green">+ 150</span>
+                    <span id="in-today" class="stat-value text-green">+ ?</span>
                 </div>
                 <div class="stat-row">
                     <span class="text-red"><i class="fa-solid fa-arrow-down"></i> Pengurangan Hari Ini</span>
-                    <span class="stat-value text-red">- 52</span>
+                    <span id="out-today" class="stat-value text-red">- ?</span>
                 </div>
             </div>
         </div>
@@ -126,11 +126,17 @@
                     <div class="form-group">
                         <label>Jenis Penyesuaian</label>
                         <div class="toggle-buttons">
-                            <button type="button" class="btn-toggle active" data-type="add">
+                            <button type="button" class="btn-toggle active" data-type="in">
                                 <i class="fa-solid fa-plus"></i> Tambah (Restock)
                             </button>
-                            <button type="button" class="btn-toggle" data-type="subtract">
+                            <button type="button" class="btn-toggle" data-type="out">
                                 <i class="fa-solid fa-minus"></i> Kurang (Terpakai/Rusak)
+                            </button>
+                            <button type="button" class="btn-toggle" data-type="correction">
+                                <div>
+                                    <i class="fa-solid fa-plus"></i>
+                                    <i class="fa-solid fa-minus"></i>
+                                </div> Correction (Koreksi Stock)
                             </button>
                             <input type="hidden" id="adjustmentType" value="add">
                         </div>
@@ -160,6 +166,7 @@
 
 <!-- JS-->
 @section('js')
-<script src="{{ asset('js/dashboard/inventory/iventory.js') }}"></script>
+<script src="{{ asset('js/dashboard/inventory/fetch-inventory.js') }}"></script>
+{{-- <script src="{{ asset('js/dashboard/inventory/iventory.js') }}"></script> --}}
 @endsection
     

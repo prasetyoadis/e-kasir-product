@@ -45,6 +45,6 @@
     
 <!-- JS-->
 @section('js')
-    <script src="js/dashboard/main.js"></script>
-    <script src="js/auth/logout.js"></script>
+    <script src="{{ asset('js/dashboard/main.js') }}"></script>
+    <script src="{{ asset('js/auth/logout.js') }}"></script>
 @endsection

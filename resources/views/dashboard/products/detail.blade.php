@@ -37,17 +37,17 @@
 @section('content')
 <div class="prod-header-card">
             <div class="prod-info-wrapper">
-                <img src="https://via.placeholder.com/80" alt="Produk" class="prod-main-img">
+                <img src="/asset/img/products/no_image.jpg" alt="Produk" class="prod-main-img">
                 <div class="prod-text-details">
                     <h1 class="prod-title">Memuat...</h1>
                 </div>
             </div>
 
             <div class="prod-actions">
-                <button class="btn-outline">
+                <button class="btn-outline" onclick='deleteProduct(@json($productId), event)'>
                     <i class="fa-regular fa-trash-can"></i> Hapus
                 </button>
-                <button class="btn-primary">
+                <button class="btn-primary" onclick='openEditProduct(@json($productId))'>
                     <i class="fa-regular fa-pen-to-square"></i> Edit Produk
                 </button>
             </div>
@@ -75,13 +75,13 @@
                     <p id="detailCategory">-</p>
                 </div>
                 <div class="info-group">
-                    <label>Berat (Gram)</label>
-                    <p id="detailWeight">-</p>
+                    <label>Punya Variant?</label>
+                    <p id="isVariant">-</p>
                 </div>
-                <div class="info-group">
+                <!-- <div class="info-group">
                     <label>Dimensi (PxLxT)</label>
                     <p id="detailDim">-</p>
-                </div>
+                </div> -->
                 <div class="info-group full-width">
                     <label>Deskripsi Lengkap</label>
                     <p id="detailDesc">-</p>
@@ -172,7 +172,7 @@
     <div id="modalVariant" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <div class="modal-header">
-                <h3>Kelola Varian</h3>
+                <h3>Tambah Varian</h3>
                 <button onclick="closeVariantModal()"
                     style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
             </div>
@@ -182,27 +182,24 @@
                         <label>Nama Varian</label>
                         <input type="text" id="varName" placeholder="Contoh: Merah, XL" required>
                     </div>
-                    <div class="form-group">
-                        <label>Harga (Rp)</label>
-                        <input type="number" id="varPrice" placeholder="0">
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label>SKU Varian</label>
-                        <input type="text" id="varSku" placeholder="Auto-generate jika kosong">
+                        <input type="text" id="varSku" placeholder="" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Deskripsi Varian</label>
+                        <textarea id="varDesc" rows="2" placeholder="Keterangan singkat varian ini..."
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Stok Awal</label>
-                        <input type="number" id="varStock" value="0">
+                        <label>Harga Awal (Rp)</label>
+                        <input type="number" id="varHargaAwal" placeholder="0" required>
+                        <small style="color: var(--text-sub); font-size: 11px;">*Harga modal/dasar</small>
                     </div>
                     <div class="form-group">
-                        <label>Status</label>
-                        <div class="toggle-wrap">
-                            <label class="switch">
-                                <input type="checkbox" id="varStatus" checked>
-                                <span class="slider"></span>
-                            </label>
-                            <span id="varStatusLabel">Aktif</span>
-                        </div>
+                        <label>Min. Stock Alert</label>
+                        <input type="number" id="varMinStock" value="0" required>
+                        <small style="color: var(--text-sub); font-size: 11px;">*Batas notifikasi stok
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -267,10 +264,18 @@
                 </div>
             </form>
         </div>
-        </div>
+    </div>
+
+@include('partials.dashboard.modal-produk')
+
 @endsection
         
 <!-- JS-->
 @section('js')
-    <script src="{{ asset('js/dashboard/product/script.js') }}"></script>
+    <script>
+        const productId = @json($productId)
+    </script>
+    <script src="{{ asset('js/dashboard/product/product-common.js') }}"></script>
+    <script src="{{ asset('js/dashboard/product/fetch-detail-product.js') }}"></script>
+    {{-- <script src="{{ asset('js/dashboard/product/script.js') }}"></script> --}}
 @endsection

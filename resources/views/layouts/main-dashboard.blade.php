@@ -10,10 +10,10 @@
 </head>
 <body>
     <header>
-        @include('partials.dashboard.header')
+        @include('partials.header')
     </header>
     <nav>
-        @include('partials.dashboard.navbar')
+        @include('partials.navbar')
     </nav>
     <!-- Main Konten -->
      <main class="container ">
