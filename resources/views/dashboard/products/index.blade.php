@@ -1,30 +1,17 @@
-<!DOCTYPE html>
-<html lang="id">
+<!-- Extends -->
+@extends('layouts.main-dashboard')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manajemen Produk - Kassia</title>
-    <link rel="stylesheet" href="{{ asset('css/product/style.css') }}">
+<!-- CSS -->
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/product/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@endsection
 
-<body>
 
-    <nav class="topbar">
-        <div class="brand">
-            <img src="{{ asset('asset/img/kassia-logo-transparent.webp') }}" alt="Logo" class="brand-icon">
-
-            <img src="{{ asset('asset/img/kassia-bg-trans.webp') }}" alt="Kassia" class="brand-text">
-        </div>
-        <div class="global-search">
-            <input type="text" placeholder="Global search..." disabled style="cursor: not-allowed; opacity: 0.6;">
-        </div>
-    </nav>
-
-    <div class="container">
-
-        <header class="page-header">
+<!-- Konten -->
+@section('content')
+<div class="page-header">
             <h1 class="page-title">Daftar Produk</h1>
             <div class="header-actions">
                 <input type="text" id="searchInput" class="table-search" placeholder="Cari nama produk...">
@@ -32,11 +19,8 @@
                     <span>+</span> Tambah Produk
                 </button>
             </div>
-        </header>
-
-        <main class="card">
-
-            <div class="filter-bar">
+</div>
+<div class="filter-bar">
                 <select id="categoryFilter" class="filter-select">
                     <option value="">Semua Kategori</option>
                     <option value="Makanan">Makanan</option>
@@ -78,12 +62,11 @@
                 </div>
             </div>
 
-        </main>
-    </div>
+            @include('partials.dashboard.products.modal-produk')
+@endsection
 
-    @include('partials.dashboard.products.modal-produk')
-
+    
+<!-- JS-->
+@section('js')
     <script src="{{ asset('js/dashboard/product/script.js') }}"></script>
-</body>
-
-</html>
+@endsection
