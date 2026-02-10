@@ -25,6 +25,13 @@
     --font-main: "Inter", sans-serif;
     --font-header: "Manrope", sans-serif;
     --header-height: 64px;
+
+    /*tamplate kassia*/
+    --color-deep-dark: #2f2f2a;
+    --color-gold: #eab308;
+    --color-warm-white: #fffef9;
+    --color-earth-brown: #8b7e66;
+    --color-clay-red: #ef4444;
 }
 
 * {
@@ -812,7 +819,10 @@ input:checked + .slider:before {
 /* --- TAB 1: INFO PRODUK (GRID LAYOUT) --- */
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsif */
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(300px, 1fr)
+    ); /* Responsif */
     gap: 24px;
 }
 
@@ -880,8 +890,14 @@ input:checked + .slider:before {
     font-size: 12px;
     font-weight: 600;
 }
-.badge-success { background: var(--success-bg); color: var(--success-text); }
-.badge-danger { background: var(--error-bg); color: var(--error-text); }
+.badge-success {
+    background: var(--success-bg);
+    color: var(--success-text);
+}
+.badge-danger {
+    background: var(--error-bg);
+    color: var(--error-text);
+}
 
 /* --- TAB 4: GALERI (MASONRY GRID) --- */
 .gallery-grid {
@@ -897,7 +913,9 @@ input:checked + .slider:before {
     border: 1px solid var(--border-color);
     background: #fff;
     aspect-ratio: 1/1; /* Kotak Sempurna */
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
 }
 
 .img-card:hover {
@@ -942,7 +960,7 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transition: opacity 0.2s;
 }
@@ -966,7 +984,7 @@ input:checked + .slider:before {
 
 /* Garis vertikal */
 .timeline-item::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 5px;
@@ -993,9 +1011,15 @@ input:checked + .slider:before {
 }
 
 /* Warna marker berdasarkan tipe */
-.timeline-marker.in { border-color: var(--success-text); }
-.timeline-marker.out { border-color: var(--error-text); }
-.timeline-marker.edit { border-color: var(--primary); }
+.timeline-marker.in {
+    border-color: var(--success-text);
+}
+.timeline-marker.out {
+    border-color: var(--error-text);
+}
+.timeline-marker.edit {
+    border-color: var(--primary);
+}
 
 .timeline-content h4 {
     font-size: 15px;
@@ -1019,8 +1043,14 @@ input:checked + .slider:before {
 
 /* Animation */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* =========================================
@@ -1066,7 +1096,7 @@ input:checked + .slider:before {
 
 /* Garis Bawah pada Tab Aktif */
 .tab-link.active::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -4px; /* Posisi garis tepat di border container */
     left: 0;

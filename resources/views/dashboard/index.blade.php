@@ -1,12 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test User Previlage</title>
-</head>
-<body>
-    <div id="dashboard" class="" style="max-width: 480px; margin: 0 auto;">
+@extends('layouts.main-dashboard')
+<!-- CSS -->
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /*tamplate kassia*/
+    --color-deep-dark: #2f2f2a;
+    --color-gold: #eab308;
+    --color-warm-white: #fffef9;
+    --color-earth-brown: #8b7e66;
+    --color-clay-red: #ef4444;
+        }
+    </style>
+@endsection
+<!-- Konten -->
+@section('content')
+<div id="dashboard" class="" style="max-width: 480px; margin: 0 auto;">
         <h2>Info</h2>
         <p>
             HTTP: /api/auth/me<br>
@@ -31,8 +41,10 @@
             <div id="reports" class="box" style="display: none; align-items: center; justify-content: center; width:100px; height:100px; text-align: center; color:white; background:blue">Reports</div>
         </div>
     </div>
-
+@endsection
+    
+<!-- JS-->
+@section('js')
     <script src="js/dashboard/main.js"></script>
     <script src="js/auth/logout.js"></script>
-</body>
-</html>
+@endsection

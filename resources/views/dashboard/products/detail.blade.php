@@ -1,20 +1,12 @@
-<!DOCTYPE html>
-<html lang="id">
+<!-- Extends -->
+@extends('layouts.main-dashboard')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Detail Produk - Kassia</title>
-
-    <link rel="stylesheet" href="{{ asset('css/product/style.css') }}">
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
+<!-- CSS -->
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{{ asset('css/product/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700&display=swap"rel="stylesheet">
+<style>
         /* Fallback CSS agar tab tidak numpuk jika CSS eksternal delay */
         .tab-content {
             display: none;
@@ -37,23 +29,13 @@
             }
         }
     </style>
-</head>
+@endsection
 
-<body>
 
-    <nav class="topbar">
-        <div class="brand">
-            <img src="{{ asset('asset/img/kassia-outline-transparent.webp') }}" alt="Logo" class="brand-icon">
-            <img src="{{ asset('asset/img/kassia-bg-trans.webp') }}" alt="Kassia" class="brand-text">
-        </div>
-        <div class="global-search">
-            <input type="text" placeholder="Cari produk, stok, atau varian...">
-        </div>
-    </nav>
-
-    <div class="container">
-
-        <header class="prod-header-card">
+    
+<!-- Konten -->
+@section('content')
+<div class="prod-header-card">
             <div class="prod-info-wrapper">
                 <img src="https://via.placeholder.com/80" alt="Produk" class="prod-main-img">
                 <div class="prod-text-details">
@@ -69,7 +51,7 @@
                     <i class="fa-regular fa-pen-to-square"></i> Edit Produk
                 </button>
             </div>
-        </header>
+        </div>
 
         <div class="tabs-wrapper">
             <div class="tabs">
@@ -285,10 +267,10 @@
                 </div>
             </form>
         </div>
-    </div>
-
+        </div>
+@endsection
+        
+<!-- JS-->
+@section('js')
     <script src="{{ asset('js/dashboard/product/script.js') }}"></script>
-
-</body>
-
-</html>
+@endsection
