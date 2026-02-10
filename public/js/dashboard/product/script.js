@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-outline" onclick="window.location.href='/dashboard/products/detail?id=${item.id}'">Detail</button>
+                            <button class="btn-outline" onclick="window.location.href='/dashboard/products/${item.id}'">Detail</button>
                             <button class="btn-outline" onclick="openEditProduct('${item.id}')">Edit</button>
                         </div>
                     </td>

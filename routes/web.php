@@ -19,9 +19,10 @@ Route::get('/dashboard/products', function () {
     ]);
 });
 
-Route::get('/dashboard/products/detail', function () {
+Route::get('/dashboard/products/{productId}', function ($productId) {
     return view('dashboard.products.detail',[
-        'title' => 'Detail Product'
+        'title' => 'Detail Product',
+        'productId' => $productId
     ]);
 });
 Route::get('/dashboard/inventories', function () {

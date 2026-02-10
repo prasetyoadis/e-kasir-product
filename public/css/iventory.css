@@ -688,15 +688,20 @@ body {
     justify-content: center;
     gap: 8px;
 }
-.btn-toggle.active[data-type="add"] {
+.btn-toggle.active[data-type="in"] {
     background: rgba(107, 142, 67, 0.15);
     color: var(--color-leaf-green);
     border-color: var(--color-leaf-green);
 }
-.btn-toggle.active[data-type="subtract"] {
+.btn-toggle.active[data-type="out"] {
     background: rgba(194, 67, 61, 0.15);
     color: var(--color-clay-red);
     border-color: var(--color-clay-red);
+}
+.btn-toggle.active[data-type="correction"] {
+    background: rgba(139, 126, 102, 0.15);
+    color: var(--color-earth-brown);
+    border-color: var(--color-earth-brown);
 }
 .modal-footer {
     padding: 20px 25px;

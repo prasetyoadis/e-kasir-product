@@ -41,7 +41,10 @@
                                 </tr>
                             </thead>
                             <tbody id="productTableBody">
-                                </tbody>
+                                <tr>
+                                    <td colspan="2" style="text-align: center">Memuat Data..</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
 
@@ -59,6 +62,7 @@
  @endsection
 
  @section('js')
- <script src="{{ asset('js/dashboard/category/category.js') }}"></script>
+ <script src="{{ asset('js/dashboard/category/fetch-category.js') }}"></script>
+ {{-- <script src="{{ asset('js/dashboard/category/category.js') }}"></script> --}}
  @endsection
     

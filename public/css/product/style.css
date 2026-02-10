@@ -62,6 +62,9 @@ h6 {
 /* =========================================
    2. UTILITY CLASSES
    ========================================= */
+.hidden{
+    display: none;
+}
 .bg-green {
     background-color: #166534;
 }
@@ -470,7 +473,7 @@ tr:hover td {
     padding: 24px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: 16px;
     overflow-y: auto;
 }
 .full-width {
