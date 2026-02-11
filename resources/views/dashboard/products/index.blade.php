@@ -11,8 +11,6 @@
 
 <!-- Konten -->
 @section('content')
-<div id="toast-container"></div>
-
 <div class="page-header">
     <h1 class="page-title">Daftar Produk</h1>
     <div class="header-actions">
