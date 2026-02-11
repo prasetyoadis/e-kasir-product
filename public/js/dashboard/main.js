@@ -1,5 +1,4 @@
 const token = localStorage.getItem('token');
-const formLogout = document.getElementById('formLogout');
 
 document.addEventListener('DOMContentLoaded', async () => {
     if(localStorage.getItem('is_logged_in') === 'false'){
