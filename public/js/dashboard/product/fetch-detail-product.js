@@ -204,20 +204,21 @@ document.addEventListener("DOMContentLoaded", () => {
         
         variants.forEach(v => {
             const statusBadge = v.is_active
-                    ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
-                    : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
+                ? `<span class="badge badge-active"><span class="dot bg-green"></span> Aktif</span>`
+                : `<span class="badge badge-inactive"><span class="dot bg-gray"></span> Nonaktif</span>`;
             const tr = document.createElement("tr");
+            const itemTerjual = v.transaction_item 
+                ? ''    
+                : `<button id="btnVarJual" class="btn-sm btn-outline" onclick="openJualModal('${v.id}')">Jual</button>`;
             tr.innerHTML = `
                 <td><strong>${v.variant_name}</strong></td>
                 <td>${v.sku || "-"}</td>
                 <td>${v.stock ?? 0}</td>
+                <td>${v.harga_awal ?? 0}</td>
+                <td>${v.transaction_item?.harga_jual ?? '-'}</td>
                 <td>${statusBadge}</td>
                 <td style="text-align:right">
-                    <button class="btn-sm btn-outline"
-                        onclick="openJualModal('${v.id}')"
-                    >
-                        Jual
-                    </button>
+                    ${itemTerjual}
                     <button class="btn-sm btn-outline"
                         onclick="openEditVariantModal(
                             '${v.id}',
@@ -237,22 +238,73 @@ document.addEventListener("DOMContentLoaded", () => {
     /**
      * MODAL TRANSACTION ITEMS SET HARGA JUAL PRODUCT
      */
-    window.openJualModal = function () {
-        const modalJual = document.getElementById("modalJual");
-        if (modalJual) {
-            modalJual.classList.add("open");
-            modalJual.style.display = "flex";
+    window.openJualModal = function (id) {
+        
+        const modal = document.getElementById("modalJual");
+        if (modal) {
+            const jualVarId = document.getElementById("productVariantId");
+            if (jualVarId) jualVarId.value = id;
+
+            modal.classList.add("open");
+            modal.style.display = "flex";
         }
     };
 
     window.closeJualModal = function () {
-        const modalJual = document.getElementById("modalJual");
-        if (modalJual) {
-            modalJual.classList.remove("open");
-            modalJual.style.display = "none";
+        const modal = document.getElementById("modalJual");
+        if (modal) {
+            modal.classList.remove("open");
+            modal.style.display = "none";
         }
     };
+    const jualForm = document.getElementById("jualForm");
 
+    // CREATE VARIANT (POST)
+    if (jualForm) {
+        jualForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            e.stopPropagation(); 
+            
+            const hargaJual = document.getElementById("transItemHargaJual").value;
+            const productVarId = document.getElementById("productVariantId").value;
+
+            // console.log(hargaJual);
+            // console.log(productVarId);
+            try {
+                const response = await fetch(`http://192.168.43.6:8003/api/transaction-items`, {
+                    method: "POST",
+                    headers: authHeader(),
+                    body: JSON.stringify({
+                        product_variant_id : productVarId,
+                        harga_jual: hargaJual
+                    }),
+                });
+
+                const json = await response.json();
+
+                // console.log(json);
+                
+                // === GENERAL RESPONSE HANDLING ===
+                if (json.statusCode >= 400) {
+                    // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                    if (json.statusCode === 400 || json.statusCode === 404) {
+                        handleApiError(json.result.errorCode, "warning");
+                    }else{
+                        handleApiError(json.result.errorCode);
+                    }
+                    return;
+                }
+
+                jualForm.reset();
+                handleApiError(json.result.errorCode, "success");
+                closeJualModal();
+                fetchProductDetail(productId); // fetch ulang
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        });
+    }
 
     /**
      * =========================================================================
@@ -386,6 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
                 const json = await response.json();
+                console.log(json);
                 
                 // === GENERAL RESPONSE HANDLING ===
                 if (json.statusCode >= 400) {
@@ -397,8 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     return;
                 }
-
+                
                 editForm.reset();
+                handleApiError(json.result.errorCode, 'success');
                 closeEditVariantModal();
                 fetchProductDetail(productId); // fetch ulang
             } catch (error) {
@@ -432,6 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         min_stock: minStock,
                     }),
                 });
+                
                 const json = await response.json();
                 
                 // === GENERAL RESPONSE HANDLING ===

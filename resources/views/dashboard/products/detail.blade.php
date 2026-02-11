@@ -104,6 +104,8 @@
                             <th>Nama Varian</th>
                             <th>SKU</th>
                             <th>Stok Saat Ini</th>
+                            <th>Harga Awal</th>
+                            <th>Harga Jual</th>
                             <th>Status</th>
                             <th style="text-align: right;">Aksi</th>
                         </tr>
@@ -272,8 +274,9 @@
                 <button onclick="closeJualModal()"
                     style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
             </div>
-            <form id="JualForm">
+            <form id="jualForm">
                 <div class="modal-body">
+                    <input type="hidden" id="productVariantId">
                     <div class="form-group">
                         <label>Harga Jual</label>
                         <input type="number" id="transItemHargaJual" placeholder="0" required>
