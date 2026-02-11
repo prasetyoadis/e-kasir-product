@@ -1,3 +1,5 @@
+import { handleApiError } from '../../errors/handleApiError.js';
+
 document.addEventListener("DOMContentLoaded", () => {
     // ================= CONFIG =================
     const CATEGORY_API = "http://192.168.43.6:8002/api/categories";
@@ -115,12 +117,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isEditing) {
             li.className = "cat-item editing";
             li.innerHTML = `
-                <input type="text" class="edit-input" value="${cat.name}" id="editInput-${cat.id || 'new'}">
+                <input type="text" class="edit-input" value="${cat.name}" id="editInput-${cat.id || 'new'}" style="width:50%">
                 <div class="cat-actions">
                     <button class="btn-icon-square btn-check" onclick="saveCategory('${cat.id || 'new'}')">
                         <i class="fa-solid fa-check"></i>
                     </button>
-                    <button class="btn-icon-square" onclick="cancelEdit()">
+                    <button class="btn-icon-square btn-cancle" onclick="cancelEdit()">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -191,23 +193,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             if (editingCategory.mode === "create") {
-                const res = await fetch(CATEGORY_API, {
+                const response = await fetch(CATEGORY_API, {
                     method: "POST",
                     headers: authHeader(),
                     body: JSON.stringify({ name }),
                 });
-                const json = await res.json();
-                ensureSuccess(json, [201]);
+                const json = await response.json();
+                                
+                // === GENERAL RESPONSE HANDLING ===
+                if (json.statusCode >= 400) {
+                    // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                    if (json.statusCode === 400 || json.statusCode === 404) {
+                        handleApiError(json.result.errorCode, "warning");
+                    }
+                    handleApiError(json.result.errorCode);
+                    return;
+                }
+
+                handleApiError(json.result.errorCode, "success");
             }
 
             if (editingCategory.mode === "edit") {
-                const res = await fetch(`${CATEGORY_API}/${editingCategory.id}`, {
+                const response = await fetch(`${CATEGORY_API}/${editingCategory.id}`, {
                     method: "PATCH",
                     headers: authHeader(),
                     body: JSON.stringify({ name }),
                 });
-                const json = await res.json();
-                ensureSuccess(json, [200]);
+                
+                const json = await response.json();
+                
+                // === GENERAL RESPONSE HANDLING ===
+                if (json.statusCode >= 400) {
+                    // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                    if (json.statusCode === 400 || json.statusCode === 404) {
+                        handleApiError(json.result.errorCode, "warning");
+                    }else{
+                        handleApiError(json.result.errorCode);
+                    }
+                    return;
+                }
+
+                handleApiError(json.result.errorCode, "success");
             }
 
             editingCategory = null;
@@ -231,13 +257,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!confirm("Hapus kategori ini?")) return;
 
         try {
-            const res = await fetch(`${CATEGORY_API}/${id}`, {
+            const response = await fetch(`${CATEGORY_API}/${id}`, {
                 method: "DELETE",
                 headers: authHeader(),
             });
 
-            const json = await res.json();
-            ensureSuccess(json, [200]);
+            const json = await response.json();
+                
+            // === GENERAL RESPONSE HANDLING ===
+            if (json.statusCode >= 400) {
+                // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                if (json.statusCode === 400 || json.statusCode === 404) {
+                    handleApiError(json.result.errorCode, "warning");
+                }else{
+                    handleApiError(json.result.errorCode);
+                }
+                return;
+            }
+
+            handleApiError(json.result.errorCode, "success");
 
             currentFilter = "Semua Menu";
             currentCategoryId = null;

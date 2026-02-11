@@ -6,9 +6,12 @@
     <title>Kassia - {{ $title }}</title>
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/toast-notify.css') }}">
     @yield ('css')
 </head>
 <body>
+<div id="toast-container"></div>
+
     <header>
         @include('partials.header')
     </header>
@@ -21,6 +24,7 @@
      </main>
      <!-- JS -->
       <script src="{{ asset('js/header.js') }}"></script>
+      <script src="{{ asset('js/auth/logout.js') }}"></script>
       @yield('js')
 </body>
 </html>

@@ -9,6 +9,7 @@
     --pure-white: #ffffff;
     --border-line: #e6e4dc;
 
+    --primary-hover: #ca8a04;
     --bg-body: var(--color-warm-white);
     --bg-card: var(--pure-white);
     --text-main: var(--color-deep-dark);
@@ -135,6 +136,8 @@ body {
     transition: transform 0.2s;
 }
 .btn-primary:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0 4px 6px -2px rgba(234, 179, 8, 0.3);
     transform: translateY(-2px);
 }
 
@@ -240,6 +243,11 @@ body {
     color: var(--color-leaf-green);
     background: rgba(107, 142, 67, 0.1);
 }
+.btn-cancle {
+    border-color: var(--color-clay-red);
+    color: var(--color-clay-red);
+    background: rgba(194, 67, 61, 0.1);
+}
 .icon-btn {
     background: transparent;
     border: 1px solid transparent;
@@ -334,6 +342,10 @@ body {
     align-items: center;
     gap: 5px;
 }
+.btn-adjust:hover {
+    background: var(--primary-hover);
+}
+
 
 /* Pagination Styles */
 .pagination-container {

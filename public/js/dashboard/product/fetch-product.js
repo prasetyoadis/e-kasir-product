@@ -1,4 +1,4 @@
-
+import { handleApiError } from '../../errors/handleApiError.js';
 
 /**
  * ============================================================================
@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }else{
                     skuField.classList.toggle('hidden', inputVariant.checked);
                     hppField.classList.toggle('hidden', inputVariant.checked);
-                    variantLabel.textContent = inputVariant.checked ? "Punya" : "Tidak";
                 }
+                variantLabel.textContent = inputVariant.checked ? "Punya" : "Tidak";
             };
             const toggleStatus = () => {
                 statusLabel.textContent = inputVariant.checked ? "Aktif" : "Tidak";
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inputNama.value = product.name;
             inputDesc.value = product.description || "";
             
-            productCatId = categories.find(cat => cat.name === product.categories[0]);
+            const productCatId = categories.find(cat => cat.name === product.categories[0]);
             if (inputKategori && product.categories)
                 inputKategori.value = productCatId.id;
             
@@ -241,15 +241,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
 
                     const json = await res.json();
-
-                    console.log(json);
+                    // console.log(json);
 
                     // === GENERAL RESPONSE HANDLING ===
                     if (json.statusCode >= 400) {
-                        console.log(json.result?.errors || "Terjadi kesalahan");
+                        // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                        if (json.statusCode === 400 || json.statusCode === 404) {
+                            handleApiError(json.result.errorCode, "warning");
+                        }else{
+                            handleApiError(json.result.errorCode);
+                        }
                         return;
                     }
-
+                    
+                    handleApiError(json.result.errorCode, "success");
                     hideModal();
                     fetchProductList(); // fungsi existing lu
                 } catch (err) {

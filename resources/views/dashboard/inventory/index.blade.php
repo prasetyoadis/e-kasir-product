@@ -155,7 +155,7 @@
             </div>
 
             <div class="modal-footer">
-                <button id="cancelBtn" class="btn-secondary">Batal</button>
+                <button id="cancelBtn" class="btn-secondary btn-danger">Batal</button>
                 <button id="saveBtn" class="btn-primary">
                     <i class="fa-solid fa-floppy-disk"></i> Simpan
                 </button>
@@ -166,7 +166,7 @@
 
 <!-- JS-->
 @section('js')
-<script src="{{ asset('js/dashboard/inventory/fetch-inventory.js') }}"></script>
+<script type="module" src="{{ asset('js/dashboard/inventory/fetch-inventory.js') }}"></script>
 {{-- <script src="{{ asset('js/dashboard/inventory/iventory.js') }}"></script> --}}
 @endsection
     

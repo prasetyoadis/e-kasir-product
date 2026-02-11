@@ -44,7 +44,7 @@
             </div>
 
             <div class="prod-actions">
-                <button class="btn-outline" onclick='deleteProduct(@json($productId), event)'>
+                <button class="btn-outline btn-danger" onclick='deleteProduct(@json($productId), event)'>
                     <i class="fa-regular fa-trash-can"></i> Hapus
                 </button>
                 <button class="btn-primary" onclick='openEditProduct(@json($productId))'>
@@ -209,7 +209,6 @@
             </form>
         </div>
     </div>
-
     <div id="modalEditVariant" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <div class="modal-header">
@@ -266,6 +265,29 @@
         </div>
     </div>
 
+    <div id="modalJual" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Jual Varian Ini</h3>
+                <button onclick="closeJualModal()"
+                    style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+            </div>
+            <form id="JualForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Harga Jual</label>
+                        <input type="number" id="transItemHargaJual" placeholder="0" required>
+                        <small style="color: var(--text-sub); font-size: 11px;">*Harga yang tampil di kasir</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" onclick="closeJualModal()">Batal</button>
+                    <button type="submit" class="btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 @include('partials.dashboard.modal-produk')
 
 @endsection
@@ -276,6 +298,6 @@
         const productId = @json($productId)
     </script>
     <script src="{{ asset('js/dashboard/product/product-common.js') }}"></script>
-    <script src="{{ asset('js/dashboard/product/fetch-detail-product.js') }}"></script>
+    <script type="module" src="{{ asset('js/dashboard/product/fetch-detail-product.js') }}"></script>
     {{-- <script src="{{ asset('js/dashboard/product/script.js') }}"></script> --}}
 @endsection

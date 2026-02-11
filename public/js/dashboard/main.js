@@ -164,8 +164,8 @@ function applyUserPrivilege(user) {
     userAccess.textContent = permissionUser.join(', ');
 }
 
-formLogout.addEventListener('submit', async (e) => {
-    e.preventDefault();
+// formLogout.addEventListener('submit', async (e) => {
+//     e.preventDefault();
 
-    await logoutUser(token);
-});
+//     await logoutUser(token);
+// });

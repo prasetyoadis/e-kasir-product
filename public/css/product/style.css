@@ -192,6 +192,14 @@ h6 {
     transform: translateY(-1px);
     box-shadow: 0 4px 6px -2px rgba(234, 179, 8, 0.3);
 }
+.btn-danger {
+    color: var(--color-warm-white) !important;
+    background: var(--color-clay-red) !important;
+}
+.btn-danger:hover {
+    color: var(--color-warm-white) !important;
+    background: var(--error-text) !important;
+}
 
 /* =========================================
    5. CARD & TABLE STYLING (INDEX PAGE)

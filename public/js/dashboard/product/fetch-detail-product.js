@@ -1,3 +1,5 @@
+import { handleApiError } from '../../errors/handleApiError.js';
+
 /**
  * ============================================================================
  * 1. GLOBAL TAB SWITCHING (UNCHANGED)
@@ -212,6 +214,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${statusBadge}</td>
                 <td style="text-align:right">
                     <button class="btn-sm btn-outline"
+                        onclick="openJualModal('${v.id}')"
+                    >
+                        Jual
+                    </button>
+                    <button class="btn-sm btn-outline"
                         onclick="openEditVariantModal(
                             '${v.id}',
                             '${v.variant_name}',
@@ -219,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             ${v.harga_awal || 0},
                             ${v.min_stock || 0},
                             ${v.is_active}
-                        )">
+                    )">
                         Edit
                     </button>
                 </td>
@@ -227,6 +234,24 @@ document.addEventListener("DOMContentLoaded", () => {
             body.appendChild(tr);
         });
     }
+    /**
+     * MODAL TRANSACTION ITEMS SET HARGA JUAL PRODUCT
+     */
+    window.openJualModal = function () {
+        const modalJual = document.getElementById("modalJual");
+        if (modalJual) {
+            modalJual.classList.add("open");
+            modalJual.style.display = "flex";
+        }
+    };
+
+    window.closeJualModal = function () {
+        const modalJual = document.getElementById("modalJual");
+        if (modalJual) {
+            modalJual.classList.remove("open");
+            modalJual.style.display = "none";
+        }
+    };
 
 
     /**
@@ -360,8 +385,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 );
 
-                if (!response.ok) {
-                    throw new Error("Gagal memperbarui varian");
+                const json = await response.json();
+                
+                // === GENERAL RESPONSE HANDLING ===
+                if (json.statusCode >= 400) {
+                    // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                    if (json.statusCode === 400 || json.statusCode === 404) {
+                        handleApiError(json.result.errorCode, "warning");
+                    }else{
+                        handleApiError(json.result.errorCode);
+                    }
+                    return;
                 }
 
                 editForm.reset();
@@ -398,12 +432,21 @@ document.addEventListener("DOMContentLoaded", () => {
                         min_stock: minStock,
                     }),
                 });
-
-                if (!response.ok) {
-                    throw new Error("Gagal menambahkan varian");
+                const json = await response.json();
+                
+                // === GENERAL RESPONSE HANDLING ===
+                if (json.statusCode >= 400) {
+                    // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                    if (json.statusCode === 400 || json.statusCode === 404) {
+                        handleApiError(json.result.errorCode, "warning");
+                    }else{
+                        handleApiError(json.result.errorCode);
+                    }
+                    return;
                 }
 
                 variantForm.reset();
+                handleApiError(json.result.errorCode, "success");
                 closeVariantModal();
                 fetchProductDetail(productId); // fetch ulang
             } catch (error) {
@@ -422,14 +465,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!confirm("Yakin Hapus Product ini?")) return;
 
         try {
-            const res = await fetch(`${API_PRODUCTS}/${id}`, {
+            const response = await fetch(`${API_PRODUCTS}/${id}`, {
                 method: "DELETE",
                 headers: authHeader(),
             });
 
-            const json = await res.json();
-
-            if (json.statusCode !== 200) throw new Error(json.result.errorMessage);
+            const json = await response.json();
+                
+            // === GENERAL RESPONSE HANDLING ===
+            if (json.statusCode >= 400) {
+                // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                if (json.statusCode === 400 || json.statusCode === 404) {
+                    handleApiError(json.result.errorCode, "warning");
+                }else{
+                    handleApiError(json.result.errorCode);
+                }
+                return;
+            }
 
             window.location.href = 'http://127.0.0.1:8002/dashboard/products';
         } catch (err) {
@@ -440,130 +492,133 @@ document.addEventListener("DOMContentLoaded", () => {
     /**
      * MODAL PRODUCT
      */
-
     // Modal Elements
-        const modalProduct = document.getElementById("modalForm");
-        const btnClose = document.getElementById("closeModal");
-        const btnBatal = document.getElementById("btnBatal");
-        const productForm = document.getElementById("productForm");
+    const modalProduct = document.getElementById("modalForm");
+    const btnClose = document.getElementById("closeModal");
+    const btnBatal = document.getElementById("btnBatal");
+    const productForm = document.getElementById("productForm");
 
-        // Input Form
-        const inputId = document.getElementById("productId");
-        const inputNama = document.getElementById("inputNama");
-        const skuField = document.getElementById("skuField");
-        const statusField = document.getElementById("statusField");
-        const gambarField = document.getElementById("gambarField");
-        const variantField = document.getElementById("variantField");
-        const hppField = document.getElementById("hppField");
-        const inputKategori = document.getElementById("inputKategori");
-        const inputDesc = document.getElementById("inputDesc");
-        const inputStatus = document.getElementById("inputStatus");
-        const inputVariant = document.getElementById("inputVariant");
-        const statusLabel = document.getElementById("statusLabel");
-        const variantLabel = document.getElementById("variantLabel");
-        const imagePreview = document.getElementById("imagePreview");
-        const previewContainer = document.getElementById("imagePreviewContainer");
+    // Input Form
+    const inputId = document.getElementById("productId");
+    const inputNama = document.getElementById("inputNama");
+    const skuField = document.getElementById("skuField");
+    const statusField = document.getElementById("statusField");
+    const gambarField = document.getElementById("gambarField");
+    const variantField = document.getElementById("variantField");
+    const hppField = document.getElementById("hppField");
+    const inputKategori = document.getElementById("inputKategori");
+    const inputDesc = document.getElementById("inputDesc");
+    const inputStatus = document.getElementById("inputStatus");
+    const inputVariant = document.getElementById("inputVariant");
+    const statusLabel = document.getElementById("statusLabel");
+    const variantLabel = document.getElementById("variantLabel");
+    const imagePreview = document.getElementById("imagePreview");
+    const previewContainer = document.getElementById("imagePreviewContainer");
         
-        function showModal() {
-            modalProduct.classList.add("open");
-            modalProduct.style.display = "flex";
+    function showModal() {
+        modalProduct.classList.add("open");
+        modalProduct.style.display = "flex";
 
-            const toggleStatus = () => {
-                statusLabel.textContent = inputVariant.checked ? "Aktif" : "Tidak";
-            }
-
-            inputStatus.addEventListener('change', toggleStatus);
-            
+        const toggleStatus = () => {
+            statusLabel.textContent = inputVariant.checked ? "Aktif" : "Tidak";
         }
 
-        function hideModal() {
-            modalProduct.classList.remove("open");
-            modalProduct.style.display = "none";
+        inputStatus.addEventListener('change', toggleStatus);
+        
+    }
+
+    function hideModal() {
+        modalProduct.classList.remove("open");
+        modalProduct.style.display = "none";
+    }
+
+    function resetForm() {
+        if (productForm) productForm.reset();
+        if (inputId) inputId.value = "";
+        if (imagePreview) imagePreview.src = "";
+        if (previewContainer) previewContainer.style.display = "none";
+        if (inputStatus) inputStatus.checked = true;
+        if (inputVariant) inputVariant.checked = false;
+        if (statusLabel) statusLabel.textContent = "Aktif";
+        if (variantLabel) statusLabel.textContent = "Tidak";
+    }
+
+    if (btnClose) btnClose.addEventListener("click", hideModal);
+    if (btnBatal) btnBatal.addEventListener("click", hideModal);
+
+    let isEditMode = true;
+    // ===== EDIT PRODUK (UNCHANGED BEHAVIOR) =====
+    window.openEditProduct = function (id) {
+        if (!productData) return;
+        productForm.reset();
+        modalTitle.textContent = "Edit Produk";
+        
+        if (isEditMode) {
+            variantField.classList.add('hidden');
+            skuField.classList.add('hidden');
+            hppField.classList.add('hidden');
+            gambarField.classList.add('hidden');
+            statusField.classList.remove('hidden');
         }
+        inputId.value = productData.id;
+        inputNama.value = productData.name;
+        inputDesc.value = productData.description || "";
+        
+        const productCatId = categories.find(cat => cat.name === productData.categories[0]);
+        if (inputKategori && productData.categories)
+            inputKategori.value = productCatId.id;
+        
+        inputStatus.checked = productData.is_active === true;
+        statusLabel.textContent = inputStatus.checked ? "Aktif" : "Nonaktif";
 
-        function resetForm() {
-            if (productForm) productForm.reset();
-            if (inputId) inputId.value = "";
-            if (imagePreview) imagePreview.src = "";
-            if (previewContainer) previewContainer.style.display = "none";
-            if (inputStatus) inputStatus.checked = true;
-            if (inputVariant) inputVariant.checked = false;
-            if (statusLabel) statusLabel.textContent = "Aktif";
-            if (variantLabel) statusLabel.textContent = "Tidak";
-        }
+        showModal();
+    };
 
-        if (btnClose) btnClose.addEventListener("click", hideModal);
-        if (btnBatal) btnBatal.addEventListener("click", hideModal);
+    // FETCH UPDATE PRODUCT 
+    if (productForm) {
+        productForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-        // ===== EDIT PRODUK (UNCHANGED BEHAVIOR) =====
-        window.openEditProduct = function (id) {
-            if (!productData) return;
+            const formData = new FormData();
 
-            productForm.reset();
-            isEditMode = true;
-            modalTitle.textContent = "Edit Produk";
-            
             if (isEditMode) {
-                variantField.classList.add('hidden');
-                skuField.classList.add('hidden');
-                hppField.classList.add('hidden');
-                gambarField.classList.add('hidden');
-                statusField.classList.remove('hidden');
+                formData.append("name", inputNama.value);
+                formData.append("description", inputDesc.value);
+                // formData.append("categories[0]", inputKategori.value);
+                formData.append("is_active", inputStatus.checked ? 1 : 0);
+                formData.append("_method", "PATCH"); 
             }
-            inputId.value = productData.id;
-            inputNama.value = productData.name;
-            inputDesc.value = productData.description || "";
-            
-            productCatId = categories.find(cat => cat.name === productData.categories[0]);
-            if (inputKategori && productData.categories)
-                inputKategori.value = productCatId.id;
-            
-            inputStatus.checked = productData.is_active === true;
-            statusLabel.textContent = inputStatus.checked ? "Aktif" : "Nonaktif";
 
-            showModal();
-        };
+            try {
+                const response = await fetch(`${API_PRODUCTS}/${productId}`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `bearer ${TOKEN}`,
+                    },
+                    body: formData,
+                });
 
-        // FETCH UPDATE PRODUCT 
-        if (productForm) {
-            productForm.addEventListener("submit", async function (e) {
-                e.preventDefault();
-
-                const formData = new FormData();
-
-                if (isEditMode) {
-                    formData.append("name", inputNama.value);
-                    formData.append("description", inputDesc.value);
-                    // formData.append("categories[0]", inputKategori.value);
-                    formData.append("is_active", inputStatus.checked ? 1 : 0);
-                    formData.append("_method", "PATCH"); 
-                }
-
-                try {
-                    const res = await fetch(`${API_PRODUCTS}/${productId}`, {
-                        method: "POST",
-                        headers: {
-                            Authorization: `bearer ${TOKEN}`,
-                        },
-                        body: formData,
-                    });
-
-                    const json = await res.json();
-
-                    console.log(json);
-
-                    // === GENERAL RESPONSE HANDLING ===
-                    if (json.statusCode >= 400) {
-                        console.log(json.result?.errors || "Terjadi kesalahan");
-                        return;
+                const json = await response.json();
+                
+                // === GENERAL RESPONSE HANDLING ===
+                if (json.statusCode >= 400) {
+                    // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                    if (json.statusCode === 400 || json.statusCode === 404) {
+                        handleApiError(json.result.errorCode, "warning");
+                    }else{
+                        handleApiError(json.result.errorCode);
                     }
-
-                    hideModal();
-                    fetchProductDetail(productId); // fetch ulang
-                } catch (err) {
-                    console.error(err);
-                    console.log("Gagal terhubung ke server");
+                    return;
                 }
-            });
-        }
+
+                resetForm();
+                handleApiError(json.result.errorCode, "success");
+                hideModal();
+                fetchProductDetail(productId); // fetch ulang
+            } catch (err) {
+                console.error(err);
+                console.log("Gagal terhubung ke server");
+            }
+        });
+    }
 });

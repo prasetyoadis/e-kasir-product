@@ -62,7 +62,7 @@
  @endsection
 
  @section('js')
- <script src="{{ asset('js/dashboard/category/fetch-category.js') }}"></script>
+ <script type="module" src="{{ asset('js/dashboard/category/fetch-category.js') }}"></script>
  {{-- <script src="{{ asset('js/dashboard/category/category.js') }}"></script> --}}
  @endsection
     

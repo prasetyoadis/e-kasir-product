@@ -1,3 +1,5 @@
+import { handleApiError } from '../../errors/handleApiError.js';
+
 document.addEventListener("DOMContentLoaded", () => {
     // =====================================
     // 1. CONFIGURATION
@@ -398,7 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateAmountLabel("in");
     }
 
-    // Handle Simpan Adjustment (Simulasi Alert)
+    // Handle Simpan Adjustment Stock
     if (saveBtn) {
         saveBtn.addEventListener("click", async () => {
             const variantId = modalProductIdHidden.value;
@@ -425,24 +427,30 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
-                const res = await fetch(endpoint, {
+                const response = await fetch(endpoint, {
                     method: "PATCH",
                     headers: authHeader(),
                     body: JSON.stringify(payload),
                 });
 
-                const json = await res.json();
-
-                // GeneralResponse handler
-                if (json.statusCode !== 200) {
-                    console.log(json.result?.errorMessage || "Gagal update stok");
+                const json = await response.json();
+                
+                // === GENERAL RESPONSE HANDLING ===
+                if (json.statusCode >= 400) {
+                    // console.log(json.result?.errorCode || "Terjadi kesalahan");
+                    if (json.statusCode === 400 || json.statusCode === 404) {
+                        handleApiError(json.result.errorCode, "warning");
+                    }else{
+                        handleApiError(json.result.errorCode);
+                    }
                     return;
                 }
 
+                handleApiError(json.result.errorCode, "success");
                 // success
                 closeModal();
 
-                // 🔥 WAJIB re-fetch
+                // WAJIB re-fetch
                 await fetchVariants(pagination?.current_page || 1);
                 await fetchInventorySummary();
 

@@ -11,6 +11,8 @@
 
 <!-- Konten -->
 @section('content')
+<div id="toast-container"></div>
+
 <div class="page-header">
     <h1 class="page-title">Daftar Produk</h1>
     <div class="header-actions">
@@ -71,6 +73,6 @@
 <!-- JS-->
 @section('js')
     <script src="{{ asset('js/dashboard/product/product-common.js') }}"></script>
-    <script src="{{ asset('js/dashboard/product/fetch-product.js') }}"></script>
+    <script type="module" src="{{ asset('js/dashboard/product/fetch-product.js') }}"></script>
     {{-- <script src="{{ asset('js/dashboard/product/script.js') }}"></script> --}}
 @endsection

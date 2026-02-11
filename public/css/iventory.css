@@ -18,6 +18,8 @@
 
     /* Status Colors */
     --primary-action: var(--color-gold);
+    --primary-hover: #ca8a04;
+    --danger-hover: #991b1b;
     --status-safe: var(--color-leaf-green);
     --status-warning: var(--color-gold);
     --status-danger: var(--color-clay-red);
@@ -250,6 +252,8 @@ body {
 }
 
 .btn-primary:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0 4px 6px -2px rgba(234, 179, 8, 0.3);
     transform: translateY(-2px);
 }
 
@@ -511,8 +515,8 @@ body {
     gap: 5px;
     transition: opacity 0.2s;
 }
-
 .btn-adjust:hover {
+    background: var(--primary-hover);
     opacity: 0.9;
 }
 
@@ -718,6 +722,15 @@ body {
     color: var(--text-muted);
     font-weight: 600;
     cursor: pointer;
+}
+
+.btn-danger {
+    color: var(--color-warm-white) !important;
+    background: var(--color-clay-red) !important;
+}
+.btn-danger:hover {
+    color: var(--color-warm-white) !important;
+    background: var(--danger-hover) !important;
 }
 
 /* ==========================================================================

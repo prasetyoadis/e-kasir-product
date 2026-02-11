@@ -1,3 +1,11 @@
+const formLogout = document.getElementById('formLogout');
+
+formLogout.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    await logoutUser(token);
+});
+
 async function logoutUser(token) {
     try {
         // const response = await fetch('test-response/200logoutsuccess.json');
@@ -18,7 +26,7 @@ async function logoutUser(token) {
         localStorage.removeItem('token');
         localStorage.setItem('is_logged_in', 'false');
 
-        window.location.href = 'http://127.0.0.1:8000/login';
+        window.location.href = 'http://127.0.0.1:8001/login';
     } catch (error) {
         console.error(error);
     }
